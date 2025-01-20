@@ -1,0 +1,90 @@
+package objektuak;
+
+import java.util.Objects;
+
+public class Taldeak {
+	private String izena;
+	private int taldekod;
+	private String herrialdea;
+	private int incrementar = 0;
+  
+
+public Taldeak() {
+	this.izena = "";
+	this.taldekod = incrementar++;
+	this.herrialdea = "";
+}
+
+public Taldeak (String izena, int taldekod, String herrialdea) {
+	this.izena = izena;
+	this.taldekod = incrementar++;
+	this.herrialdea = herrialdea;
+}
+
+public Taldeak (Taldeak beste) {
+	this.izena = beste.izena;
+	this.taldekod = beste.taldekod;
+	this.herrialdea = beste.herrialdea;
+}
+
+public String getIzena() {
+	return izena;
+}
+
+public void setIzena(String izena) {
+	this.izena = izena;
+}
+
+public int getTaldekod() {
+	return taldekod;
+}
+
+public void setTaldekod(int taldekod) {
+	this.taldekod = taldekod;
+}
+
+public String getHerrialdea() {
+	return herrialdea;
+}
+
+public void setHerrialdea(String herrialdea) {
+	this.herrialdea = herrialdea;
+}
+
+public int getIncrementar() {
+	return incrementar;
+}
+
+public void setIncrementar(int incrementar) {
+	this.incrementar = incrementar;
+}
+
+@Override
+public int hashCode() {
+	return Objects.hash(herrialdea, incrementar, izena, taldekod);
+}
+
+@Override
+public String toString() {
+	return "Taldeak [izena=" + izena + ", taldekod=" + taldekod + ", herrialdea=" + herrialdea + ", incrementar="
+			+ incrementar + "]";
+}
+
+@Override
+public boolean equals(Object obj) {
+	if (this == obj)
+		return true;
+	if (obj == null)
+		return false;
+	if (getClass() != obj.getClass())
+		return false;
+	Taldeak other = (Taldeak) obj;
+	return Objects.equals(herrialdea, other.herrialdea) && incrementar == other.incrementar
+			&& Objects.equals(izena, other.izena) && taldekod == other.taldekod;
+}
+
+public int compareTo(Taldeak o) {
+	return Integer. compare(this.getTaldekod(), o.taldekod);
+}
+
+}
