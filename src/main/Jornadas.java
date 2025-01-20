@@ -10,7 +10,7 @@ public class Jornadas {
         int numeroEquipos = equipos.size();
 
         if (numeroEquipos < 2) {
-            throw new IllegalArgumentException("Se necesitan al menos dos equipos para generar jornadas.");
+            throw new IllegalArgumentException("Se necesitan al menos dos equipos para generar jornadas..");
         }
 
         boolean esImpar = (numeroEquipos % 2 != 0);
