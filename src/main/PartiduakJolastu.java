@@ -1,42 +1,28 @@
 package main;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-//AMAITU GABE ETA IMPLEMENTATU GABE
+import java.util.List;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.swing.*;
+import java.awt.*;
+
+import objektuak.Taldeak;
+import objektuak.Partiduak;;
+
 public class PartiduakJolastu extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JComboBox<String> comboBoxSetakEtxekoak;
-    private JComboBox<String> comboBoxSetakKampotarrak;
-    private JButton btnGordeSetak;
-    private JButton btnAtzera;
-    private JComboBox<String> comboBoxKampotarrak;
-    private JComboBox<String> comboBoxEtxekoak;
-    private JButton btnKlasifikazioa;
-    private JComboBox<String> comboBoxJornadas;
-    private JComboBox<String> comboBoxPartidos;
-    private ArrayList<String[]> datos; 
-    private JLabel lblNewLabel;
-    private ArrayList<String[]> datos2;
+    private JButton btnJugar, btnJardunaldiakErakutsi;
+    private JTextField textTaldeA, textTaldeB;
     
-    public PartiduakJolastu(String[] jornadas, String[] partidos, String[] taldeak) {
-        datos = new ArrayList<>();
-        datos2 = new ArrayList<>();
-
+    private List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
+    
+    public PartiduakJolastu() {
+        // Configuración de la ventana principal
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 500);
         contentPane = new JPanel();
@@ -44,139 +30,201 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblPartiduakJolastu = new JLabel("Partiduak Jolastu");
-        lblPartiduakJolastu.setForeground(new Color(255, 255, 255));
-        lblPartiduakJolastu.setFont(new Font("Tahoma", Font.PLAIN, 24));
-        lblPartiduakJolastu.setHorizontalAlignment(SwingConstants.CENTER);
-        lblPartiduakJolastu.setBounds(132, 10, 323, 78);
-        contentPane.add(lblPartiduakJolastu);
-
-        // ComboBox para jornadas
-        comboBoxJornadas = new JComboBox<>(jornadas);
-        comboBoxJornadas.setBounds(24, 100, 225, 21);
-        comboBoxJornadas.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	
-            	comboBoxPartidos.setModel(new DefaultComboBoxModel<>(partidos));
-            }
-        });
-        contentPane.add(comboBoxJornadas);
-
-        JLabel lblJornadas = new JLabel("Jornadas:");
-        lblJornadas.setForeground(new Color(255, 255, 255));
-        lblJornadas.setBounds(24, 80, 157, 21);
-        contentPane.add(lblJornadas);
-
-        //Partiduen combobox
-        comboBoxPartidos = new JComboBox<>(partidos);
-        comboBoxPartidos.setBounds(334, 100, 225, 21);
-        contentPane.add(comboBoxPartidos);
-
-        JLabel lblPartidos = new JLabel("Partidos:");
-        lblPartidos.setForeground(new Color(255, 255, 255));
-        lblPartidos.setBounds(334, 80, 157, 21);
-        contentPane.add(lblPartidos);
-
-        // Combobox para Etxekoak y Kampotarrak
-        comboBoxEtxekoak = new JComboBox<>(taldeak);
-        comboBoxEtxekoak.setBounds(24, 160, 225, 21);
-        contentPane.add(comboBoxEtxekoak);
-
-        comboBoxKampotarrak = new JComboBox<>(taldeak);
-        comboBoxKampotarrak.setBounds(334, 160, 225, 21);
-        contentPane.add(comboBoxKampotarrak);
-
-        JLabel lblEtxekoak = new JLabel("Etxekoak:");
-        lblEtxekoak.setForeground(new Color(255, 255, 255));
-        lblEtxekoak.setBounds(24, 140, 157, 21);
-        contentPane.add(lblEtxekoak);
-
-        JLabel lblKampotarrak = new JLabel("Kampotarrak:");
-        lblKampotarrak.setForeground(new Color(255, 255, 255));
-        lblKampotarrak.setBounds(334, 140, 157, 21);
-        contentPane.add(lblKampotarrak);
-
-        JLabel lblSetakExtekoak = new JLabel("Irabazitako setak");
-        lblSetakExtekoak.setForeground(new Color(255, 255, 255));
-        lblSetakExtekoak.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSetakExtekoak.setBounds(63, 200, 157, 21);
-        contentPane.add(lblSetakExtekoak);
-
-        JLabel lblSetakKampotarrak = new JLabel("Irabazitako setak:");
-        lblSetakKampotarrak.setForeground(new Color(255, 255, 255));
-        lblSetakKampotarrak.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSetakKampotarrak.setBounds(368, 200, 157, 21);
-        contentPane.add(lblSetakKampotarrak);
-
-        comboBoxSetakEtxekoak = new JComboBox<>(new String[]{"0", "1", "2", "3"});
-        comboBoxSetakEtxekoak.setMaximumRowCount(6);
-        comboBoxSetakEtxekoak.setBounds(104, 230, 71, 21);
-        contentPane.add(comboBoxSetakEtxekoak);
-
-        comboBoxSetakKampotarrak = new JComboBox<>(new String[]{"0", "1", "2", "3"});
-        comboBoxSetakKampotarrak.setMaximumRowCount(6);
-        comboBoxSetakKampotarrak.setBounds(410, 230, 71, 21);
-        contentPane.add(comboBoxSetakKampotarrak);
-
-        btnGordeSetak = new JButton("Gorde setak");
-        btnGordeSetak.setBounds(43, 280, 177, 21);
-        btnGordeSetak.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int a = Integer.parseInt(comboBoxSetakEtxekoak.getSelectedItem().toString());
-                int b = Integer.parseInt(comboBoxSetakKampotarrak.getSelectedItem().toString());
-                boolean sonEquiposIguales = comboBoxEtxekoak.getSelectedItem().equals(comboBoxKampotarrak.getSelectedItem());
-                boolean esEmpateEnSets = comboBoxSetakEtxekoak.getSelectedItem().equals(comboBoxSetakKampotarrak.getSelectedItem());
-                boolean setshiru = a < 3 && b < 3;
-                if (sonEquiposIguales) {
-                    JOptionPane.showMessageDialog(null, "Ezin dira talde berdinak partidu batean egon", "Errorea", JOptionPane.ERROR_MESSAGE);
-                } else if (esEmpateEnSets) {
-                    JOptionPane.showMessageDialog(null, "Ezin dira berdinketan geratu", "Errorea", JOptionPane.ERROR_MESSAGE);
-                } else if (setshiru) {
-                    JOptionPane.showMessageDialog(null, "Taldeetatik bat 3 sets irabazi behar du", "Errorea", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    String jornadaSeleccionada = (String) comboBoxJornadas.getSelectedItem();
-                    String partidoSeleccionado = (String) comboBoxPartidos.getSelectedItem();
-                    String selectedItem1 = (String) comboBoxEtxekoak.getSelectedItem();
-                    String selectedItem2 = (String) comboBoxSetakEtxekoak.getSelectedItem();
-                    String selectedItem3 = (String) comboBoxKampotarrak.getSelectedItem();
-                    String selectedItem4 = (String) comboBoxSetakKampotarrak.getSelectedItem();
-                    datos.add(new String[]{jornadaSeleccionada, partidoSeleccionado, selectedItem1, selectedItem2, selectedItem3, selectedItem4});
-                    JOptionPane.showMessageDialog(null, "Datuak gordeta.");
-                }
-            }
-        });
-        contentPane.add(btnGordeSetak);
-
-        btnAtzera = new JButton("Atzera");
-        btnAtzera.setBounds(474, 400, 85, 21);
-        btnAtzera.addActionListener(e -> {
-            Menua m = new Menua();
-            m.setVisible(true);
-            dispose();
-        });
-        contentPane.add(btnAtzera);
-
-        btnKlasifikazioa = new JButton("Klasifikazioa");
-        btnKlasifikazioa.setBounds(354, 280, 177, 21);
-        btnKlasifikazioa.addActionListener(e -> {
-            Klasifikazioa ventanaTabla = new Klasifikazioa(datos, datos2);
-            ventanaTabla.setVisible(true);
-            dispose();
-        });
-        contentPane.add(btnKlasifikazioa);
-
-        lblNewLabel = new JLabel();
-        lblNewLabel.setIcon(new ImageIcon("C:\\Users\\IK_1DW3D\\Downloads\\blue-background-abstract-illustration-with-gradient-blur-design-free-vector_resized.jpg"));
-        lblNewLabel.setBounds(0, 0, 598, 501);
-        contentPane.add(lblNewLabel);
-
-        setVisible(true);
+        List<List<String>> jardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();	
+      	List<String> jornadaIzenak = jardunaldiak.get(jardunaldiak.size() - 1);
+      	JPanel jardunaldiPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      	jardunaldiPanel.setBounds(50, 0, 600, 500);
+    		contentPane.add(jardunaldiPanel);
+    		
+    		int counter = 0;
+    		for (String jardunaldIzena : jornadaIzenak) {
+    			JButton btnJardunaldia = new JButton(jardunaldIzena);
+    			jardunaldiPanel.add(btnJardunaldia);
+    			JPopupMenu menu = new JPopupMenu();	
+      		//menu.setLayout(new BoxLayout(menu, BoxLayout.X_AXIS));
+    			btnJardunaldia.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							menu.show(btnJardunaldia, btnJardunaldia.getX() / 12, btnJardunaldia.getY() - btnJardunaldia.getHeight());
+						}
+					});
+    			
+    			List<String> jardunaldia = jardunaldiak.get(counter);
+    			for (String partidua : jardunaldia) {
+    				boolean aldaketa = false;
+    				String izena1 = "";
+    				String izena2 = "";
+    				char c = ' ';
+    				
+    				for (int i = 0; i < partidua.length(); i++) {
+    					c = partidua.charAt(i);
+    					if (aldaketa == false) {
+    						if (partidua.charAt(i) == 'i' && partidua.charAt(i + 1) == 'z' && partidua.charAt(i + 2) == 'e' && partidua.charAt(i + 3) == 'n' && partidua.charAt(i + 4) == 'a') {
+      						i += 6;
+      						while (c != ',' && i < partidua.length()) {
+      							c = partidua.charAt(i);
+      							if (c != ',') {
+      								izena1 += c;
+      							}
+      							i++;
+      							aldaketa = true;
+      						}
+      					}
+    					}
+    					else {
+    						if (partidua.charAt(i) == 'i' && partidua.charAt(i + 1) == 'z' && partidua.charAt(i + 2) == 'e' && partidua.charAt(i + 3) == 'n' && partidua.charAt(i + 4) == 'a') {
+      						i += 6;
+      						while (c != ',' && i < partidua.length()) {
+      							c = partidua.charAt(i);
+      							if (c != ',') {
+      								izena2 += c;
+      							}
+      							i++;
+      							aldaketa = false;
+      						}
+      						i = partidua.length();
+      					}
+    					}
+    				}
+    				
+    				String taldeA = izena1;
+    				String taldeB = izena2;
+    				JMenuItem partiduak = new JMenuItem(izena1 + " VS " + izena2);
+    				partiduak.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								puntuazioaSartu(partiduak, taldeA, taldeB);
+							}
+						});
+    				menu.add(partiduak);
+    			}
+    			counter++;
+    		}
+    }
+    
+    public void puntuazioaSartu (JMenuItem partidua, String taldeA, String taldeB) {
+    	JPanel puntuazioPanela = new JPanel(new GridLayout(4, 1));
+  		JLabel eskaeraTaldeA = new JLabel(taldeA + " taldearen puntuazioa sartu: ");
+  		JTextField puntuazioaSartu1 = new JTextField();
+  		JLabel eskaeraTaldeB = new JLabel(taldeB + " taldearen puntuazioa sartu: ");
+  		JTextField puntuazioaSartu2 = new JTextField();
+  		
+  		puntuazioPanela.add(eskaeraTaldeA);
+  		puntuazioPanela.add(puntuazioaSartu1);
+  		puntuazioPanela.add(eskaeraTaldeB);
+  		puntuazioPanela.add(puntuazioaSartu2);
+  		
+  		JOptionPane.showMessageDialog(null, puntuazioPanela, "Emaitzak Sartzeko", JOptionPane.OK_CANCEL_OPTION);
+  		
+  		String puntuazioaA = puntuazioaSartu1.getText();
+  		String puntuazioaB = puntuazioaSartu2.getText();
+  		if (puntuazioaA.isEmpty()) {
+  			JOptionPane.showMessageDialog(null, (taldeA + " taldeko puntuazioa sartu behar da. Berriro saiatu mesedez"), "Errorea", JOptionPane.ERROR_MESSAGE);
+  		}
+  		else if (puntuazioaB.isEmpty()) {
+  			JOptionPane.showMessageDialog(null, (taldeB + " taldeko puntuazioa sartu behar da. Berriro saiatu mesedez"), "Errorea", JOptionPane.ERROR_MESSAGE);
+  		}
+  		else {
+  			boolean ezDiraZenbakiak = false;
+  			char c;
+  			for (int i = 0; i < puntuazioaA.length(); i++) {
+  				c = puntuazioaA.charAt(i);
+  				if (!Character.isDigit(c)) {
+  					ezDiraZenbakiak = true;
+  				}
+  			}
+  			for (int i2 = 0; i2 < puntuazioaB.length(); i2++) {
+  				c = puntuazioaA.charAt(i2);
+  				if (!Character.isDigit(c)) {
+  					ezDiraZenbakiak = true;
+  				}
+  			}
+  			if (ezDiraZenbakiak == false) {
+  				
+  			}
+  			else {
+  				JOptionPane.showMessageDialog(null, "Puntuazioko datuak, zenbaki osoak izatea derrigorrezkoa da. Saiatu berriro mesedez");
+  			}
+  		}
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
-        //amaitu gabe
+    public void actionPerformed(ActionEvent e) {
+    	
+    	
+        // Acción cuando se hace clic en el botón "Jugar"
+       /*  if (e.getSource() == btnJugar) {
+        	String taldea1 = textTaldeA.getText();
+        	String taldea2 = textTaldeB.getText();
+        	int counter = 0;
+        	
+         if (!taldea1.isEmpty() && !taldea2.isEmpty()) {
+        	 for (Taldeak taldea : listaTaldeak) {
+        		 if (taldea1.equals(taldea.getIzena())) {
+        			 counter++;
+        		 }
+        		 if (taldea2.equals(taldea.getIzena())) {
+        			 counter++;
+        		 }
+        	 }
+        	 
+        	 if (counter == 2) {
+        		 JPanel datuakSartu = new JPanel(new GridLayout(4, 1));
+        		 JLabel eskaera1 = new JLabel(taldea1 + " taldearen puntuazioa sartu: ");
+        		 JTextField puntuazioaSartu1 = new JTextField();
+        		 JLabel eskaera2 = new JLabel(taldea2 + " taldearen puntuazioa sartu: ");
+        		 JTextField puntuazioaSartu2= new JTextField();
+        		 
+        		 datuakSartu.add(eskaera1);
+        		 datuakSartu.add(puntuazioaSartu1);
+        		 datuakSartu.add(eskaera2);
+        		 datuakSartu.add(puntuazioaSartu2);
+        		 JOptionPane.showMessageDialog(null, datuakSartu, "Emaitzak Sartzeko", JOptionPane.OK_CANCEL_OPTION);
+        		 
+        		 boolean interruptorea = false;
+        		 String puntuazioa1 = puntuazioaSartu1.getText().trim();
+        		 String puntuazioa2 = puntuazioaSartu2.getText().trim();
+        		 char c;
+        		 
+        		 for (int i = 0; i < puntuazioa1.length(); i++) {
+        			 c = puntuazioa1.charAt(i);
+        			 if (!Character.isDigit(c)) {
+        				 interruptorea = true;
+        			 }
+        		 }
+        		 for (int i2 = 0; i2 < puntuazioa2.length(); i2++) {
+        			 c = puntuazioa1.charAt(i2);
+        			 if (!Character.isDigit(c)) {
+        				 interruptorea = true;
+        			 }
+        		 }
+        		 
+        		 if (interruptorea == false) {
+        			 
+        		 }
+        		 else {
+        			 JOptionPane.showMessageDialog(null, "Puntuazioan, bakarri zenbakiak sartu ahal dira. Berriro saiatu mesedez", "Errorea", JOptionPane.ERROR_MESSAGE);
+        		 }
+        	 }
+        	 else {
+        		 
+        	 }
+         }
+         else {
+        	 if (taldea1.isEmpty()) {
+        		 JOptionPane.showMessageDialog(null, "A taldearen izenaren eremua utxik dago. A taldearen izena sartu eta berriro saiatu mesedez.", "Errorea", JOptionPane.ERROR_MESSAGE);
+        	 }
+        	 else {
+        		 JOptionPane.showMessageDialog(null, "B taldearen izenaren eremua utxik dago. B taldearen izena sartu eta berriro saiatu mesedez.", "Errorea", JOptionPane.ERROR_MESSAGE);
+        	 }
+         }
+        } 
+        else if (e.getSource() == btnJardunaldiakErakutsi) {
+        	List<List<String>> jardunaldiIrakurria = TaldeenErabilpena.jardunaldiakIrakurri();
+        	VentanaJornadas JFrameJardunaldia = new VentanaJornadas(jardunaldiIrakurria);
+        	JFrameJardunaldia.setVisible(true);
+        }*/
     }
 }

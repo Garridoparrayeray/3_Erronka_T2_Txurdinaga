@@ -4,6 +4,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaJornadas extends JFrame {
@@ -19,14 +20,19 @@ public class VentanaJornadas extends JFrame {
 
         // Taula sortu
         model = new DefaultTableModel();
+        model.addColumn("Jornada");
         model.addColumn("Partido");
         model.addColumn("Resultado");
 
         // Partiduak sortu eta jornadak ikusi
-        for (List<String> jornada : jornadas) {
-            for (String partido : jornada) {
-                model.addRow(new Object[]{partido, ""});
-            }
+        List<String> jornada = new ArrayList<String>();
+        List<String> jornadaIzenak = jornadas.get(jornadas.size() - 1);
+        for (int i = 0; i < jornadas.size() - 2; i++) {
+        	jornada = jornadas.get(i);
+        	String jornadaIzena = jornadaIzenak.get(i);
+        	for (String partido : jornada) {
+            model.addRow(new Object[]{jornadaIzena, partido, ""});
+        }
         }
 
         // taula berria
@@ -42,19 +48,23 @@ public class VentanaJornadas extends JFrame {
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                guardarResultados();
+                TaldeenErabilpena.jardunaldiakGorde(jornadas);
+                VentanaJornadas JFrameEguneratua = new VentanaJornadas(jornadas);
+                JFrameEguneratua.setVisible(true);
+                dispose()	;
             }
         });
         getContentPane().add(btnGuardar, BorderLayout.SOUTH);
+        
     }
 
     // Partiduetako emaitza gorde
     private void guardarResultados() {
         for (int i = 0; i < model.getRowCount(); i++) {
-            String partido = (String) model.getValueAt(i, 0);
-            String resultado = (String) model.getValueAt(i, 1);
+        	String jornada = (String) model.getValueAt(i, 0);
+            String partido = (String) model.getValueAt(i, 1);
+            String resultado = (String) model.getValueAt(i, 2);
             System.out.println(partido + " - Resultado: " + resultado);
         }
     }
-
 }

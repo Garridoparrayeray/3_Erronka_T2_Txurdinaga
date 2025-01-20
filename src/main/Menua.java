@@ -5,6 +5,9 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import objektuak.Taldeak;
+import objektuak.Jokalariak;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
@@ -12,15 +15,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 public class Menua extends JFrame implements ActionListener {
-
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JButton btnTaldeaSortu;
-    private JButton btnPartiduakJolastu;
-    private JButton btnKlasifikazioa;
-    private JButton btnSaioaItxi;
-    private JButton btnGenerarJornadas;
+    private JButton btnTaldeaSortu, btnJokalariaSortu, btnPartiduakJolastu, btnKlasifikazioa, btnSaioaItxi, btnGenerarJornadas;
     private List<String> taldeak = new ArrayList<>();
+    private List<String> jokalariak = new ArrayList<>();
+    private List<Taldeak> listaTaldea = TaldeenErabilpena.irakurriTaldeak();
+    private List<Jokalariak> listaJokalariak = TaldeenErabilpena.irakurriJokalariak();
+    
+    private List<List<String>> jornadas = new ArrayList<List<String>>();
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -36,6 +39,7 @@ public class Menua extends JFrame implements ActionListener {
     public Menua() {
     	//TALDERIK BADAGO EDO EZ FITXATEGIAN
         taldeakIrakurri();
+        jokalariakIrakurri();
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 578, 402);
@@ -51,6 +55,14 @@ public class Menua extends JFrame implements ActionListener {
         btnTaldeaSortu.setFont(new Font("Tahoma", Font.PLAIN, 14));
         btnTaldeaSortu.setBounds(23, 108, 175, 46);
         contentPane.add(btnTaldeaSortu);
+        
+        btnJokalariaSortu = new JButton("Jokalariak sortu");
+        btnJokalariaSortu.setBackground(Color.white);
+        btnJokalariaSortu.setForeground(Color.BLACK);
+        btnJokalariaSortu.addActionListener(this);
+        btnJokalariaSortu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnJokalariaSortu.setBounds(23, 208, 175, 46);
+        contentPane.add(btnJokalariaSortu);
 
         btnPartiduakJolastu = new JButton("Partiduak jolastu");
         btnPartiduakJolastu.setBackground(Color.white);
@@ -65,7 +77,7 @@ public class Menua extends JFrame implements ActionListener {
         btnKlasifikazioa.setForeground(Color.BLACK);
         btnKlasifikazioa.addActionListener(this);
         btnKlasifikazioa.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnKlasifikazioa.setBounds(191, 208, 179, 46);
+        btnKlasifikazioa.setBounds(360, 208, 179, 46);
         contentPane.add(btnKlasifikazioa);
 
         btnSaioaItxi = new JButton("Saioa itxi");
@@ -76,7 +88,7 @@ public class Menua extends JFrame implements ActionListener {
         contentPane.add(btnSaioaItxi);
 
         JLabel lblGoiBurua = new JLabel("Boleibol Federazioa");
-        lblGoiBurua.setForeground(new Color(248, 248, 255));
+        lblGoiBurua.setForeground(Color.BLACK);
         lblGoiBurua.setFont(new Font("Tahoma", Font.PLAIN, 24));
         lblGoiBurua.setHorizontalAlignment(SwingConstants.CENTER);
         lblGoiBurua.setBounds(171, 25, 229, 39);
@@ -95,23 +107,27 @@ public class Menua extends JFrame implements ActionListener {
             }
 
             try {
-
-                List<List<String>> jornadas = Jornadas.generarJornadas(taldeak);
-                StringBuilder resultado = new StringBuilder("Jornadas generadas:\n\n");
+            	
+            	jornadas = Jornadas.generarJornadas(listaTaldea);
+            	VentanaJornadas JFrameJoranadas = new VentanaJornadas(jornadas);
+            	JFrameJoranadas.setVisible(true);
+                /*StringBuilder resultado = new StringBuilder("Jornadas generadas:\n\n");
                 for (int i = 0; i < jornadas.size(); i++) {
                     resultado.append("Jornada ").append(i + 1).append(":\n");
                     for (String partido : jornadas.get(i)) {
                         resultado.append("  - ").append(partido).append("\n");
                     }
                     resultado.append("\n");
-                }
-                JOptionPane.showMessageDialog(this, resultado.toString(), "Jornadas", JOptionPane.INFORMATION_MESSAGE);
+                }*/
+                //JOptionPane.showMessageDialog(this, resultado.toString(), "Jornadas", JOptionPane.INFORMATION_MESSAGE);
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         btnGenerarJornadas.setBounds(200, 303, 150, 21);
         contentPane.add(btnGenerarJornadas);
+        
+        EguneratuTaldeak();
         
     }
    
@@ -124,6 +140,16 @@ public class Menua extends JFrame implements ActionListener {
         	this.taldeak = new ArrayList<>();
         }
     }
+    
+    private void jokalariakIrakurri(){
+      try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("jokalariak.dat"))) {
+      List<String> loadedJokalariak = (List<String>) ois.readObject();
+      this.jokalariak = loadedJokalariak;
+      } catch (IOException | ClassNotFoundException e) {
+     // Fitxategia ez badago edo irakurtzean errore bat badago, hutsik dagoen zerrenda abiaraziko dugu
+      	this.jokalariak = new ArrayList<>();
+      }
+  }
 
     public void botoiak_erakutsi(boolean erakutsi) {
         btnPartiduakJolastu.setVisible(erakutsi);
@@ -139,16 +165,29 @@ public class Menua extends JFrame implements ActionListener {
            JFrame.setVisible(true);
            dispose();
         } else if (o == btnPartiduakJolastu) {
-            JOptionPane.showMessageDialog(this, "Ez daude oraindik partiduak gordeta!", "Errorea", JOptionPane.WARNING_MESSAGE);
+            PartiduakJolastu JFrame3 = new PartiduakJolastu();
+            JFrame3.setVisible(true);
+            dispose();
         } else if (o == btnKlasifikazioa) {
             JOptionPane.showMessageDialog(this, "Lehengo sartu behar dituzu datuak", "Errorea", JOptionPane.ERROR_MESSAGE);
         } else if (o == btnSaioaItxi) {
             System.exit(0);
         }
+        else if (o == btnJokalariaSortu) {
+        	JokalariaSortu JFrame2 = new JokalariaSortu(this);
+          JFrame2.setVisible(true);
+          dispose();
+        }
     }
     public void EguneratuTaldeak() {
-        taldeak = TaldeenErabilpena.irakurriTaldeak();
-        botoiak_erakutsi(taldeak.size() >= 6); //ez badaude talde naikorik ez da abiarazten botoiak
+    		listaTaldea = TaldeenErabilpena.irakurriTaldeak();
+        botoiak_erakutsi(listaTaldea.size() >= 6); //ez badaude talde naikorik ez da abiarazten botoiak
+        
+        btnJokalariaSortu.setVisible(listaTaldea.size() >= 1 ? true : false);
     }
+    
+    public void EguneratuJokalariak() {
+  		listaJokalariak = TaldeenErabilpena.irakurriJokalariak();
+  }
     
 }

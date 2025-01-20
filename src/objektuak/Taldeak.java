@@ -1,8 +1,9 @@
 package objektuak;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Taldeak {
+public class Taldeak implements Serializable{
 	private String izena;
 	private int taldekod;
 	private String herrialdea;
@@ -17,7 +18,7 @@ public Taldeak() {
 
 public Taldeak (String izena, int taldekod, String herrialdea) {
 	this.izena = izena;
-	this.taldekod = incrementar++;
+	this.taldekod = taldekod;
 	this.herrialdea = herrialdea;
 }
 

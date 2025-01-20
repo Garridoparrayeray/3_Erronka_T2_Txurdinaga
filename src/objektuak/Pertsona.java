@@ -17,6 +17,14 @@ public class Pertsona {
         this.NAN = "";
         this.jaiotzedata = null;
     }
+    
+    public Pertsona(String izena, String abizena ) {
+    	this.izena = izena;
+    	this.abizena = izena;
+    	this.mota = null;
+    	this.NAN = "";
+    	this.jaiotzedata = null;
+    }
 
     public Pertsona(String izena, String abizena, PertsonaMota mota, String NAN, LocalDate jaiotzedata) {
         this.izena = izena;
