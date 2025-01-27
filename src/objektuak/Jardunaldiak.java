@@ -1,23 +1,35 @@
 package objektuak;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.*;
+import main.Jornadas;
 
-public class Jardunaldiak{
+import main.TaldeenErabilpena;
+
+public class Jardunaldiak {
 	private int jardunaldi_kod;
 	private String jardunaldi_deskribapena;
 	private LocalDate hasiera_data;
 	private LocalDate amaiera_data;
 	private int partidu_kopurua;
-	
-	private int counter = 0;
+	private Denboraldiak denboraldia;
 	
 	public Jardunaldiak() {
-		this.jardunaldi_kod = counter++;
+		this.jardunaldi_kod = automatikoa();
 		this.jardunaldi_deskribapena = "";
 		this.hasiera_data = null;
 		this.amaiera_data = null;
 		this.partidu_kopurua = 0;
+		this.denboraldia = new Denboraldiak();
+	}
+	
+	public Jardunaldiak(Denboraldiak denboraldia) {
+		this.jardunaldi_kod = automatikoa();
+		this.jardunaldi_deskribapena = "";
+		this.hasiera_data = null;
+		this.amaiera_data = null;
+		this.partidu_kopurua = 0;
+		this.denboraldia = denboraldia;
 	}
 	
 	public Jardunaldiak(int jardunaldi_kod, LocalDate hasiera_data, LocalDate amaiera_data) {
@@ -26,6 +38,7 @@ public class Jardunaldiak{
 		this.hasiera_data = hasiera_data;
 		this.amaiera_data = amaiera_data;
 		this.partidu_kopurua = 0;
+		this.denboraldia = new Denboraldiak();
 	}
 	
 	public Jardunaldiak(int jardunaldi_kod, String jardunaldi_deskribapena, LocalDate hasiera_data, LocalDate amaiera_data, int partidu_kopurua) {
@@ -34,6 +47,7 @@ public class Jardunaldiak{
 		this.hasiera_data = hasiera_data;
 		this.amaiera_data = amaiera_data;
 		this.partidu_kopurua = partidu_kopurua;
+		this.denboraldia = new Denboraldiak();
 	}
 	
 	public Jardunaldiak (Jardunaldiak bestea) {
@@ -42,6 +56,33 @@ public class Jardunaldiak{
 		this.hasiera_data = bestea.hasiera_data;
 		this.amaiera_data = bestea.amaiera_data;
 		this.partidu_kopurua = bestea.partidu_kopurua;
+		this.denboraldia = new Denboraldiak();
+	}
+	
+	public int automatikoa() {
+		List<Jornadas> jornadas = TaldeenErabilpena.jardunaldiakIrakurri();
+		List<List<Jardunaldiak>> jardunaldiak = new ArrayList<List<Jardunaldiak>>();
+		
+		
+		for (Jornadas jornada : jornadas) {
+			jardunaldiak.add(jornada.getJardunaldiak());
+		}
+		boolean errepikatua;
+		boolean amaiera = false;
+		int hasiera = 0;
+		for (List<Jardunaldiak> listaJardunaldia : jardunaldiak) {
+			errepikatua = false;
+			hasiera++;
+			for (Jardunaldiak jardunaldia : listaJardunaldia) {
+				if (hasiera == jardunaldia.getJardunaldi_kod()) {
+					errepikatua = true;
+				}
+			}
+			if (errepikatua == false) {
+				return hasiera;
+			}
+		}
+		return 0;
 	}
 	
 	public String toString() {
@@ -110,12 +151,12 @@ public boolean equals(Object bestea) {
 	public void setPartidu_kopurua(int partidu_kopurua) {
 		this.partidu_kopurua = partidu_kopurua;
 	}
-
-	public int getCounter() {
-		return counter;
+	
+	public void setDenboradia (Denboraldiak denboraldia) {
+		this.denboraldia = denboraldia;
 	}
-
-	public void setCounter(int counter) {
-		this.counter = counter;
+	
+	public Denboraldiak getDenboraldiak() {
+		return denboraldia;
 	}
 }

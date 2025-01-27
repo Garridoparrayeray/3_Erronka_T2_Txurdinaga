@@ -6,6 +6,7 @@ import java.util.Objects;
 public class Taldeak implements Serializable{
 	private String izena;
 	private int taldekod;
+	private String zelaia;
 	private String herrialdea;
 	private int incrementar = 0;
   
@@ -13,18 +14,28 @@ public class Taldeak implements Serializable{
 public Taldeak() {
 	this.izena = "";
 	this.taldekod = incrementar++;
+	this.zelaia = "";
 	this.herrialdea = "";
 }
 
-public Taldeak (String izena, int taldekod, String herrialdea) {
+public Taldeak (int taldekod, String izena, String zelaia) {
 	this.izena = izena;
 	this.taldekod = taldekod;
+	this.zelaia = zelaia;
+	this.herrialdea = "";
+}
+
+public Taldeak (int taldeKod, String izena, String zelaia, String herrialdea) {
+	this.taldekod = taldeKod;
+	this.izena = izena;
+	this.zelaia = zelaia;
 	this.herrialdea = herrialdea;
 }
 
 public Taldeak (Taldeak beste) {
 	this.izena = beste.izena;
 	this.taldekod = beste.taldekod;
+	this.zelaia = beste.zelaia;
 	this.herrialdea = beste.herrialdea;
 }
 
@@ -54,6 +65,14 @@ public void setHerrialdea(String herrialdea) {
 
 public int getIncrementar() {
 	return incrementar;
+}
+
+public String getZelaia() {
+	return zelaia;
+}
+
+public void setZelaia(String zelaia) {
+	this.zelaia = zelaia;
 }
 
 public void setIncrementar(int incrementar) {

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import objektuak.Taldeak;
+import objektuak.Jardunaldiak;
 import objektuak.Jokalariak;
 
 import java.awt.*;
@@ -18,12 +19,10 @@ public class Menua extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JButton btnTaldeaSortu, btnJokalariaSortu, btnPartiduakJolastu, btnKlasifikazioa, btnSaioaItxi, btnGenerarJornadas;
-    private List<String> taldeak = new ArrayList<>();
-    private List<String> jokalariak = new ArrayList<>();
     private List<Taldeak> listaTaldea = TaldeenErabilpena.irakurriTaldeak();
     private List<Jokalariak> listaJokalariak = TaldeenErabilpena.irakurriJokalariak();
     
-    private List<List<String>> jornadas = new ArrayList<List<String>>();
+    private List<Jornadas> listaJardunaldiak = new ArrayList<Jornadas>();
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -38,8 +37,8 @@ public class Menua extends JFrame implements ActionListener {
 
     public Menua() {
     	//TALDERIK BADAGO EDO EZ FITXATEGIAN
-        taldeakIrakurri();
-        jokalariakIrakurri();
+        listaTaldea = TaldeenErabilpena.irakurriTaldeak();
+        listaJokalariak = TaldeenErabilpena.irakurriJokalariak();
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 578, 402);
@@ -95,21 +94,20 @@ public class Menua extends JFrame implements ActionListener {
         contentPane.add(lblGoiBurua);
 
         btnGenerarJornadas = new JButton("Jornadak sortu");
-        if(taldeak.size() >= 6){
+        if(listaTaldea.size() >= 6){
             botoiak_erakutsi(true);
         }else{
             botoiak_erakutsi(false);
         }
         btnGenerarJornadas.addActionListener(e -> {
-            if (taldeak.isEmpty()) {
+            if (listaTaldea.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Gutxienez sei talde egon behar dira.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
-            	
-            	jornadas = Jornadas.generarJornadas(listaTaldea);
-            	VentanaJornadas JFrameJoranadas = new VentanaJornadas(jornadas);
+            	Jornadas jardunaldia = new Jornadas(listaTaldea);
+            	VentanaJornadas JFrameJoranadas = new VentanaJornadas(jardunaldia);
             	JFrameJoranadas.setVisible(true);
                 /*StringBuilder resultado = new StringBuilder("Jornadas generadas:\n\n");
                 for (int i = 0; i < jornadas.size(); i++) {
@@ -130,26 +128,6 @@ public class Menua extends JFrame implements ActionListener {
         EguneratuTaldeak();
         
     }
-   
-    private void taldeakIrakurri(){
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("taldeak.dat"))) {
-        List<String> loadedTaldeak = (List<String>) ois.readObject();
-        this.taldeak = loadedTaldeak;
-        } catch (IOException | ClassNotFoundException e) {
-       // Fitxategia ez badago edo irakurtzean errore bat badago, hutsik dagoen zerrenda abiaraziko dugu
-        	this.taldeak = new ArrayList<>();
-        }
-    }
-    
-    private void jokalariakIrakurri(){
-      try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("jokalariak.dat"))) {
-      List<String> loadedJokalariak = (List<String>) ois.readObject();
-      this.jokalariak = loadedJokalariak;
-      } catch (IOException | ClassNotFoundException e) {
-     // Fitxategia ez badago edo irakurtzean errore bat badago, hutsik dagoen zerrenda abiaraziko dugu
-      	this.jokalariak = new ArrayList<>();
-      }
-  }
 
     public void botoiak_erakutsi(boolean erakutsi) {
         btnPartiduakJolastu.setVisible(erakutsi);

@@ -1,7 +1,12 @@
 package objektuak;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import main.Jornadas;
+import main.TaldeenErabilpena;
 
 
 public class Partiduak {
@@ -12,19 +17,34 @@ public class Partiduak {
 		private LocalDate partidudata;
 		private int etxekoTaldekoPuntuazioa;
 		private int kanpokoTaldekoPuntuazioa;
+		
+		private Jardunaldiak jardunaldia;
+		
 		private int counter = 0;
 		
 		public Partiduak() {
-			this.partidu_kod = counter++;
+			this.partidu_kod = automatikoa();
 			this.etxeko_taldea = "";
 			this.kanpoko_taldea = "";
 			this.zelaia = "";
 			this.partidudata = null;
 			this.etxekoTaldekoPuntuazioa = 0;
 			this.kanpokoTaldekoPuntuazioa = 0;
+			this.jardunaldia = new Jardunaldiak();
 		}
 		
-		public Partiduak(int partidu_kod, String etxeko_taldea, String kanpoko_taldea, String zelaia, LocalDate partidudata, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa) {
+		public Partiduak(String etxeko_taldea, String kanpoko_taldea, String zelaia, Jardunaldiak jardunaldia) {
+			this.partidu_kod = automatikoa();;
+			this.etxeko_taldea = etxeko_taldea;
+			this.kanpoko_taldea = kanpoko_taldea;
+			this.zelaia = zelaia;
+			this.partidudata = null;
+			this.etxekoTaldekoPuntuazioa = 0;
+			this.kanpokoTaldekoPuntuazioa = 0;
+			this.jardunaldia = jardunaldia;
+		}
+		
+		public Partiduak(int partidu_kod, String etxeko_taldea, String kanpoko_taldea, String zelaia, LocalDate partidudata, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
 			this.partidu_kod = partidu_kod;
 			this.etxeko_taldea = etxeko_taldea;
 			this.kanpoko_taldea = kanpoko_taldea;
@@ -32,6 +52,7 @@ public class Partiduak {
 			this.partidudata = partidudata;
 			this.etxekoTaldekoPuntuazioa = etxekoTaldekoPuntuazioa;
 			this.kanpokoTaldekoPuntuazioa = kanpokoTaldekoPuntuazioa;
+			this.jardunaldia = new Jardunaldiak();
 		}
 		
 		public Partiduak(Partiduak bestea) {
@@ -42,6 +63,33 @@ public class Partiduak {
 			this.partidudata = bestea.partidudata;
 			this.etxekoTaldekoPuntuazioa = bestea.etxekoTaldekoPuntuazioa;
 			this.kanpokoTaldekoPuntuazioa = bestea.kanpokoTaldekoPuntuazioa;
+			this.jardunaldia = new Jardunaldiak();
+		}
+		
+		public int automatikoa() {
+			List<Jornadas> jornadas = TaldeenErabilpena.jardunaldiakIrakurri();
+			List<List<Partiduak>> partiduak = new ArrayList<List<Partiduak>>();
+			
+			
+			for (Jornadas jornada : jornadas) {
+				partiduak.add(jornada.getPartiduak());
+			}
+			boolean errepikatua;
+			boolean amaiera = false;
+			int hasiera = 0;
+			for (List<Partiduak> listaPartiduak : partiduak) {
+				errepikatua = false;
+				hasiera++;
+				for (Partiduak partidua : listaPartiduak) {
+					if (hasiera == partidua.getPartidu_kod()) {
+						errepikatua = true;
+					}
+				}
+				if (errepikatua == false) {
+					return hasiera;
+				}
+			}
+			return 0;
 		}
 		
 		public String toString() {
@@ -133,5 +181,13 @@ public class Partiduak {
 
 		public void setCounter(int counter) {
 			this.counter = counter;
+		}
+		
+		public void setJardunaldia(Jardunaldiak jardunaldia) {
+			this.jardunaldia = jardunaldia;
+		}
+		
+		public Jardunaldiak getJardunaldiak() {
+			return jardunaldia;
 		}
 }

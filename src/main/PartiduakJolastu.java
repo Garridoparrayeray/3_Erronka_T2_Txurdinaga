@@ -11,7 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 
 import objektuak.Taldeak;
-import objektuak.Partiduak;;
+import objektuak.Partiduak;
+import objektuak.Jardunaldiak;
 
 public class PartiduakJolastu extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
@@ -29,16 +30,18 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
-
-        List<List<String>> jardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();	
-      	List<String> jornadaIzenak = jardunaldiak.get(jardunaldiak.size() - 1);
+        
+        List<Jornadas> listaJornadas = TaldeenErabilpena.jardunaldiakIrakurri();
+  			Jornadas jornada = listaJornadas.get(listaJornadas.size() - 1);
+        
+        List<Jardunaldiak> jardunaldiak = jornada.getJardunaldiak();
       	JPanel jardunaldiPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       	jardunaldiPanel.setBounds(50, 0, 600, 500);
     		contentPane.add(jardunaldiPanel);
     		
     		int counter = 0;
-    		for (String jardunaldIzena : jornadaIzenak) {
-    			JButton btnJardunaldia = new JButton(jardunaldIzena);
+    		for (Jardunaldiak jardunaldIzena : jardunaldiak) {
+    			JButton btnJardunaldia = new JButton(jardunaldIzena.getJardunaldi_deskribapena());
     			jardunaldiPanel.add(btnJardunaldia);
     			JPopupMenu menu = new JPopupMenu();	
       		//menu.setLayout(new BoxLayout(menu, BoxLayout.X_AXIS));
@@ -50,55 +53,19 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
 						}
 					});
     			
-    			List<String> jardunaldia = jardunaldiak.get(counter);
-    			for (String partidua : jardunaldia) {
-    				boolean aldaketa = false;
-    				String izena1 = "";
-    				String izena2 = "";
-    				char c = ' ';
-    				
-    				for (int i = 0; i < partidua.length(); i++) {
-    					c = partidua.charAt(i);
-    					if (aldaketa == false) {
-    						if (partidua.charAt(i) == 'i' && partidua.charAt(i + 1) == 'z' && partidua.charAt(i + 2) == 'e' && partidua.charAt(i + 3) == 'n' && partidua.charAt(i + 4) == 'a') {
-      						i += 6;
-      						while (c != ',' && i < partidua.length()) {
-      							c = partidua.charAt(i);
-      							if (c != ',') {
-      								izena1 += c;
-      							}
-      							i++;
-      							aldaketa = true;
-      						}
-      					}
-    					}
-    					else {
-    						if (partidua.charAt(i) == 'i' && partidua.charAt(i + 1) == 'z' && partidua.charAt(i + 2) == 'e' && partidua.charAt(i + 3) == 'n' && partidua.charAt(i + 4) == 'a') {
-      						i += 6;
-      						while (c != ',' && i < partidua.length()) {
-      							c = partidua.charAt(i);
-      							if (c != ',') {
-      								izena2 += c;
-      							}
-      							i++;
-      							aldaketa = false;
-      						}
-      						i = partidua.length();
-      					}
-    					}
-    				}
-    				
-    				String taldeA = izena1;
-    				String taldeB = izena2;
-    				JMenuItem partiduak = new JMenuItem(izena1 + " VS " + izena2);
-    				partiduak.addActionListener(new ActionListener() {
+    			List<Partiduak> partiduak = jornada.getPartiduak();
+    			for (Partiduak partidua : partiduak) {    				
+    				String taldeA = partidua.getEtxeko_taldea();
+    				String taldeB = partidua.getKanpoko_taldea();
+    				JMenuItem partiduakMenu = new JMenuItem(taldeA + " VS " + taldeB);
+    				partiduakMenu.addActionListener(new ActionListener() {
 							
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								puntuazioaSartu(partiduak, taldeA, taldeB);
+								puntuazioaSartu(partiduakMenu, taldeA, taldeB);
 							}
 						});
-    				menu.add(partiduak);
+    				menu.add(partiduakMenu);
     			}
     			counter++;
     		}

@@ -79,39 +79,23 @@ public class TaldeenErabilpena {
         }
     }
     
-    public static List<List<String>> jardunaldiakIrakurri() {
+    public static List<Jornadas> jardunaldiakIrakurri() {
     	File file3 = new File(jardunaldiakFile);
-    	if (file3.exists()) {
-    		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file3))) {
-    			return (List<List<String>>) ois.readObject();
-    		} catch (IOException | ClassNotFoundException e) {
-    			JOptionPane.showMessageDialog(null, "Jardunaldiak irakurtzeko orduan errorea eman du.", "Errorea", JOptionPane.ERROR_MESSAGE);
-    		}
-    	}
-    	return new ArrayList<List<String>>();
+      if (file3.exists()) {
+          try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file3))) {            	
+          	return (List<Jornadas>) ois.readObject();
+          } catch (IOException | ClassNotFoundException e) {
+          	JOptionPane.showMessageDialog(null, "Jardunaldiak irakurtzeko orduan errorea ematen du. Berriro saiatu mesedez..", "Jardunaldiak Irakurtzeko Errorrea", JOptionPane.ERROR_MESSAGE);
+          }
+      }
+    	return new ArrayList<Jornadas>();
     }
     
-    public static void jardunaldiakGorde(List<List<String>> jardunaldiak) {
-    	File file3 = new File(jardunaldiakFile);
-    	try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file3))) {
+    public static void jardunaldiakGorde(List<Jornadas> jardunaldiak) {
+    	try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jardunaldiakFile))) {
     		oos.writeObject(jardunaldiak);
     	} catch (IOException e) {
-    		JOptionPane.showMessageDialog(null, "Jardunaldiak gordetzeko orduan errorea eman du.", "Errorea", JOptionPane.ERROR_MESSAGE);
-    	}
+				JOptionPane.showMessageDialog(null, "Errorea jardunaldiak gordetzeko orduan. Berriro saiatu mesedez.", "Jardunaldiak Gordetzean Errorea", JOptionPane.ERROR_MESSAGE);
+			}
     }
-
-    public static  List<Partiduak> partiduakIrakurri() {
-    	return new ArrayList<Partiduak>();
-    }
-    public static void partiduakGorde() {
-    	
-    }
-    
-    public static List<Denboraldiak> denboraldiakIrakurri() {
-    	return new ArrayList<Denboraldiak>();
-    }
-    public static void denboraldiakGorde() {
-    	
-    }
-    
 }

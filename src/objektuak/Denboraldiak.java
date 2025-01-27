@@ -3,6 +3,8 @@ package objektuak;
 import java.time.LocalDate;
 import java.awt.*;
 import javax.swing.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,21 +17,19 @@ public class Denboraldiak {
 	private LocalDate amaiera_data;
 	private int jardunaldi_kopurua;
 	
-	private List<Denboraldiak> listaDenboraldiak = TaldeenErabilpena.denboraldiakIrakurri();
-	private int counter = listaDenboraldiak.size();
+	private List<Jornadas> listaJardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();
 	
 	public Denboraldiak() {
-		counter++;
-		this.denboraldi_kod = counter;
+		this.denboraldi_kod = automatikoa();
 		this.denboraldi_Izena = "";
 		this.hasiera_data = null;
 		this.amaiera_data = null;
 		this.jardunaldi_kopurua = 0;
 	}
 	
-	public Denboraldiak(int denboraldi_kod, LocalDate hasiera_data, LocalDate amaiera_data) {
-		this.denboraldi_kod = denboraldi_kod;
-		this.denboraldi_Izena = "";
+	public Denboraldiak(String denboraldi_Izena, LocalDate hasiera_data, LocalDate amaiera_data) {
+		this.denboraldi_kod = automatikoa();
+		this.denboraldi_Izena = denboraldi_Izena;
 		this.hasiera_data = hasiera_data;
 		this.amaiera_data = amaiera_data;
 		this.jardunaldi_kopurua = 0;
@@ -49,6 +49,30 @@ public class Denboraldiak {
 		this.hasiera_data = bestea.hasiera_data;
 		this.amaiera_data = bestea.amaiera_data;
 		this.jardunaldi_kopurua = bestea.jardunaldi_kopurua;
+	}
+	
+	public int automatikoa() {
+		List<Denboraldiak> denboraldiak = new ArrayList<Denboraldiak>();
+		for (Jornadas jardunaldia : listaJardunaldiak) {
+			denboraldiak.add(jardunaldia.getDenboraldiak());
+		}
+		boolean errepikatua;
+		boolean amaiera = false;
+		int hasiera = 0;
+		
+		while (amaiera == false) {
+			errepikatua = false;
+			hasiera++;
+			for (int i = 0; i < denboraldiak.size(); i++) {
+				if (hasiera == denboraldiak.get(i).getDenboraldi_kod()) {
+					errepikatua = true;
+				}
+			}
+			if (errepikatua == false) {
+				return hasiera;
+			}
+		}
+		return 0;
 	}
 	
 	public String toString() {
@@ -116,21 +140,5 @@ public class Denboraldiak {
 
 	public void setJardunaldi_kopurua(int jardunaldi_kopurua) {
 		this.jardunaldi_kopurua = jardunaldi_kopurua;
-	}
-
-	public List<Denboraldiak> getListaDenboraldiak() {
-		return listaDenboraldiak;
-	}
-
-	public void setListaDenboraldiak(List<Denboraldiak> listaDenboraldiak) {
-		this.listaDenboraldiak = listaDenboraldiak;
-	}
-
-	public int getCounter() {
-		return counter;
-	}
-
-	public void setCounter(int counter) {
-		this.counter = counter;
 	}
 }

@@ -7,12 +7,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import objektuak.*;
+
 public class VentanaJornadas extends JFrame {
     private static final long serialVersionUID = 3655324882502558546L;
     private JTable table;
     private DefaultTableModel model;
 
-    public VentanaJornadas(List<List<String>> jornadas) {
+    public VentanaJornadas(Jornadas jornadas) {
         setTitle("Gestión de Jornadas");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -23,17 +25,32 @@ public class VentanaJornadas extends JFrame {
         model.addColumn("Jornada");
         model.addColumn("Partido");
         model.addColumn("Resultado");
-
+        
         // Partiduak sortu eta jornadak ikusi
-        List<String> jornada = new ArrayList<String>();
-        List<String> jornadaIzenak = jornadas.get(jornadas.size() - 1);
-        for (int i = 0; i < jornadas.size() - 2; i++) {
-        	jornada = jornadas.get(i);
-        	String jornadaIzena = jornadaIzenak.get(i);
+        List<Jardunaldiak> jardunaldiak = jornadas.getJardunaldiak();
+        List<Partiduak> partiduak = jornadas.getPartiduak();
+        boolean hurrengora;
+        int counter = 0;
+        for (Jardunaldiak jardunaldia : jardunaldiak) {
+        	hurrengora = false;
+        	String izena = jardunaldia.getJardunaldi_deskribapena();
+        	while (hurrengora == false) {
+        		if (partiduak.get(counter).getJardunaldiak().equals(jardunaldia)) {
+        			model.addRow(new Object[]{izena, (partiduak.get(counter).getEtxeko_taldea() + " VS " + partiduak.get(counter).getKanpoko_taldea()), ""});
+        		}
+        		else {
+        			hurrengora = true;
+        		}
+        		counter++;
+        	}
+        }
+        
+        /*for (int i = 0; i < jardunaldia.size() - 2; i++) {
+        	String jornadaIzena = ja;
         	for (String partido : jornada) {
             model.addRow(new Object[]{jornadaIzena, partido, ""});
-        }
-        }
+        	}
+        }*/
 
         // taula berria
         table = new JTable(model);
@@ -48,7 +65,9 @@ public class VentanaJornadas extends JFrame {
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TaldeenErabilpena.jardunaldiakGorde(jornadas);
+            		List<Jornadas> jardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();
+            		jardunaldiak.add(jornadas);
+                TaldeenErabilpena.jardunaldiakGorde(jardunaldiak);
                 VentanaJornadas JFrameEguneratua = new VentanaJornadas(jornadas);
                 JFrameEguneratua.setVisible(true);
                 dispose()	;

@@ -14,7 +14,7 @@ import main.Menua;
 public class TaldeakSortu extends JFrame implements ActionListener {
 
     private JPanel contentPane;
-    private JTextField textTaldeak, textTaldeakKodea, textTaldeakHerria;
+    private JTextField textTaldeak, textTaldeakKodea, textTaldeakZelaia;
     private JButton btnGordeIzenak, btnKenduTaldea, btnGordeAldaketak;
     private DefaultTableModel tableModel;
     private JTable tableTaldeak;
@@ -57,14 +57,14 @@ public class TaldeakSortu extends JFrame implements ActionListener {
         contentPane.add(textTaldeak);
         textTaldeak.setColumns(10);
         
-        JLabel lblTaldeenHerrialdea = new JLabel("Taldearen Herrialdea:");
+        JLabel lblTaldeenHerrialdea = new JLabel("Taldearen Zelaia:");
         lblTaldeenHerrialdea.setBounds(21, 158, 132, 23);
         contentPane.add(lblTaldeenHerrialdea);
 
-        textTaldeakHerria = new JTextField();
-        textTaldeakHerria.setBounds(21, 180, 223, 19);
-        contentPane.add(textTaldeakHerria);
-        textTaldeakHerria.setColumns(10);
+        textTaldeakZelaia = new JTextField();
+        textTaldeakZelaia.setBounds(21, 180, 223, 19);
+        contentPane.add(textTaldeakZelaia);
+        textTaldeakZelaia.setColumns(10);
 
         btnGordeIzenak = new JButton("Gorde Taldea");
         btnGordeIzenak.addActionListener(this);
@@ -114,7 +114,7 @@ public class TaldeakSortu extends JFrame implements ActionListener {
         if (source == btnGordeIzenak) {
             String izena = textTaldeak.getText().trim();
             int taldeKod = Integer.valueOf(textTaldeakKodea.getText().trim());
-            String herria = textTaldeakHerria.getText().trim();
+            String zelaia = textTaldeakZelaia.getText().trim();
             boolean errepikatu = false;
             
             for (Taldeak taldea : listaTaldeak) {
@@ -128,11 +128,11 @@ public class TaldeakSortu extends JFrame implements ActionListener {
             } else if (isDuplicate(izena)) {
                 JOptionPane.showMessageDialog(this, "Talde hau dagoeneko gehituta dago", "Errorea", JOptionPane.WARNING_MESSAGE);
             } else {
-            		Taldeak taldea = new Taldeak(izena, taldeKod, herria);
-                tableModel.addRow(new Object[]{taldeKod + " " + izena + " " + herria});
+            		Taldeak taldea = new Taldeak(taldeKod, izena, zelaia);
+                tableModel.addRow(new Object[]{taldeKod + " " + izena + " " + zelaia});
                 textTaldeak.setText("");
                 textTaldeakKodea.setText("");
-                textTaldeakHerria.setText("");
+                textTaldeakZelaia.setText("");
                 listaTaldeak.add(taldea);
             }
             }
@@ -157,7 +157,7 @@ public class TaldeakSortu extends JFrame implements ActionListener {
                 	if (Character.isDigit(c)) {
                 		zenbakiaAteratzen += c;
                 	}
-                	else if (!Character.isDigit(c)){
+                	else if (!Character.isDigit(c)) {
                 		taldeKod = Integer.valueOf(zenbakiaAteratzen);
                 		i = txt.length() * 10;
                 	}
