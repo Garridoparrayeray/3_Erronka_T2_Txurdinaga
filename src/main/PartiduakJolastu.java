@@ -20,8 +20,6 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     private JButton btnJugar, btnJardunaldiakErakutsi;
     private JTextField textTaldeA, textTaldeB;
     
-    private List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
-    
     public PartiduakJolastu() {
         // Configuración de la ventana principal
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,44 +29,55 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
+        List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
+        
         List<Jornadas> listaJornadas = TaldeenErabilpena.jardunaldiakIrakurri();
   			Jornadas jornada = listaJornadas.get(listaJornadas.size() - 1);
         
         List<Jardunaldiak> jardunaldiak = jornada.getJardunaldiak();
       	JPanel jardunaldiPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      	jardunaldiPanel.setBounds(50, 0, 600, 500);
+      	jardunaldiPanel.setBounds(50, 0, 500, 400);
     		contentPane.add(jardunaldiPanel);
     		
+    		List<Partiduak> partiduak = jornada.getPartiduak();
+    		int primariCounter = 0;
     		int counter = 0;
-    		for (Jardunaldiak jardunaldIzena : jardunaldiak) {
-    			JButton btnJardunaldia = new JButton(jardunaldIzena.getJardunaldi_deskribapena());
-    			jardunaldiPanel.add(btnJardunaldia);
-    			JPopupMenu menu = new JPopupMenu();	
-      		//menu.setLayout(new BoxLayout(menu, BoxLayout.X_AXIS));
-    			btnJardunaldia.addActionListener(new ActionListener() {
-						
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							menu.show(btnJardunaldia, btnJardunaldia.getX() / 12, btnJardunaldia.getY() - btnJardunaldia.getHeight());
-						}
-					});
-    			
-    			List<Partiduak> partiduak = jornada.getPartiduak();
-    			for (Partiduak partidua : partiduak) {    				
-    				String taldeA = partidua.getEtxeko_taldea();
-    				String taldeB = partidua.getKanpoko_taldea();
-    				JMenuItem partiduakMenu = new JMenuItem(taldeA + " VS " + taldeB);
-    				partiduakMenu.addActionListener(new ActionListener() {
-							
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								puntuazioaSartu(partiduakMenu, taldeA, taldeB);
-							}
-						});
-    				menu.add(partiduakMenu);
+    		System.out.println(partiduak.size());
+    		System.out.println(jardunaldiak.size());
+    			while (counter < partiduak.size() - 1 || primariCounter < jardunaldiak.size() - 1) {
+    				Jardunaldiak jardunaldia = jardunaldiak.get(primariCounter);
+    				JButton btnJardunaldia = new JButton(jardunaldia.getJardunaldi_deskribapena());
+      			jardunaldiPanel.add(btnJardunaldia);
+    				JPopupMenu menu = new JPopupMenu();	
+        		//menu.setLayout(new BoxLayout(menu, BoxLayout.X_AXIS));
+      			btnJardunaldia.addActionListener(new ActionListener() {
+  						
+  						@Override
+  						public void actionPerformed(ActionEvent e) {
+  							menu.show(btnJardunaldia, btnJardunaldia.getX() / 12, btnJardunaldia.getY() - btnJardunaldia.getHeight());
+  						}
+  					});
+      			
+      			
+    				for (int i = 0; i < (listaTaldeak.size()) / 2; i++) {
+    					if (counter != partiduak.size()) {
+    						Partiduak partidua = partiduak.get(counter);
+        				String taldeA = partidua.getEtxeko_taldea();
+        				String taldeB = partidua.getKanpoko_taldea();
+        				JMenuItem partiduakMenu = new JMenuItem(taldeA + " VS " + taldeB);
+        				partiduakMenu.addActionListener(new ActionListener() {
+    							
+    							@Override
+    							public void actionPerformed(ActionEvent e) {
+    								puntuazioaSartu(partiduakMenu, taldeA, taldeB);
+    							}
+    						});
+        				menu.add(partiduakMenu);
+        				counter++;
+    					}
+    				}
+    				primariCounter++;
     			}
-    			counter++;
-    		}
     }
     
     public void puntuazioaSartu (JMenuItem partidua, String taldeA, String taldeB) {

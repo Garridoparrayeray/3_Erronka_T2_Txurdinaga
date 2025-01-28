@@ -1,5 +1,6 @@
 package objektuak;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import main.Jornadas;
 import main.TaldeenErabilpena;
 
 
-public class Partiduak {
+public class Partiduak implements Serializable {
 		private int partidu_kod;
 		private String etxeko_taldea;
 		private String kanpoko_taldea;

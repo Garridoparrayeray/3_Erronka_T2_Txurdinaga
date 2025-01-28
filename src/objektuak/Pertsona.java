@@ -1,9 +1,10 @@
 package objektuak;
 
 import java.util.Objects;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Pertsona {
+public class Pertsona implements Serializable{
     private String izena;
     private String abizena;
     private PertsonaMota mota;

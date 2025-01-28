@@ -2,6 +2,8 @@ package objektuak;
 
 import java.time.LocalDate;
 import java.awt.*;
+import java.io.Serializable;
+
 import javax.swing.*;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.Objects;
 
 import main.*;
 
-public class Denboraldiak {
+public class Denboraldiak implements Serializable {
 	private int denboraldi_kod;
 	private String denboraldi_Izena;
 	private LocalDate hasiera_data;

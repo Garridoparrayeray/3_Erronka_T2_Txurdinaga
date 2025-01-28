@@ -1,12 +1,13 @@
 package objektuak;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import main.Jornadas;
 
 import main.TaldeenErabilpena;
 
-public class Jardunaldiak {
+public class Jardunaldiak  implements Serializable{
 	private int jardunaldi_kod;
 	private String jardunaldi_deskribapena;
 	private LocalDate hasiera_data;
@@ -32,12 +33,12 @@ public class Jardunaldiak {
 		this.denboraldia = denboraldia;
 	}
 	
-	public Jardunaldiak(int jardunaldi_kod, LocalDate hasiera_data, LocalDate amaiera_data) {
-		this.jardunaldi_kod = jardunaldi_kod;
-		this.jardunaldi_deskribapena = "";
-		this.hasiera_data = hasiera_data;
-		this.amaiera_data = amaiera_data;
-		this.partidu_kopurua = 0;
+	public Jardunaldiak(String jardunaldi_deskribapena, int partidu_kopurua) {
+		this.jardunaldi_kod = automatikoa();
+		this.jardunaldi_deskribapena = jardunaldi_deskribapena;
+		this.hasiera_data = null;
+		this.amaiera_data = null;
+		this.partidu_kopurua = partidu_kopurua;
 		this.denboraldia = new Denboraldiak();
 	}
 	
@@ -70,17 +71,17 @@ public class Jardunaldiak {
 		boolean errepikatua;
 		boolean amaiera = false;
 		int hasiera = 0;
-		for (List<Jardunaldiak> listaJardunaldia : jardunaldiak) {
-			errepikatua = false;
-			hasiera++;
-			for (Jardunaldiak jardunaldia : listaJardunaldia) {
-				if (hasiera == jardunaldia.getJardunaldi_kod()) {
-					errepikatua = true;
+			for (List<Jardunaldiak> listaJardunaldia : jardunaldiak) {
+				errepikatua = false;
+				hasiera++;
+				for (Jardunaldiak jardunaldia : listaJardunaldia) {
+					if (hasiera == jardunaldia.getJardunaldi_kod()) {
+						errepikatua = true;
+					}
 				}
-			}
-			if (errepikatua == false) {
-				return hasiera;
-			}
+				if (errepikatua == false) {
+					return hasiera;
+				}
 		}
 		return 0;
 	}

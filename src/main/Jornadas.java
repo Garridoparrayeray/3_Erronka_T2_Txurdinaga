@@ -9,11 +9,8 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 import objektuak.*;
 
@@ -32,7 +29,7 @@ public class Jornadas implements Serializable{
     	List<Jardunaldiak> listaJardunaldiak = new ArrayList<Jardunaldiak>();
     	List<Partiduak> listaPartiduak = new ArrayList<Partiduak>();
   		Taldeak deskantzua = new Taldeak();
-  		int counter = 0;
+  		int counter = 1;
     		JPanel denboraldiPanela = new JPanel(new GridLayout(3, 2));
     		JLabel izenaEskaera = new JLabel("Denboraldiaren Izena: ");
     		JTextField izenaSartu = new JTextField();
@@ -49,8 +46,6 @@ public class Jornadas implements Serializable{
         
         JOptionPane.showMessageDialog(null, denboraldiPanela, "Denboraldia Sartzeko", JOptionPane.OK_CANCEL_OPTION);
         boolean zenbakiakE = false;
-        String konrpobatzeko;
-        char c;
        /* for (int i = 0; i < 3; i++) {
         	konrpobatzeko = taula.getValueAt(i, 1).toString();
         	for (int i2 = 0; i2 < konrpobatzeko.length(); i2++) {
@@ -80,45 +75,44 @@ public class Jornadas implements Serializable{
         	JOptionPane.showMessageDialog(null, "Datarako, bakarrik zenbaki osoak sartu ahal dira. Berriro saiatu mesedez.", "Datak Sartzeko Errorea", JOptionPane.ERROR_MESSAGE);
         }
     		
-    		if (taldeak.size() % 2 != 0) {
+        int taldeKopurua = taldeak.size() - 1;
+        
+    		if (taldeKopurua + 1 % 2 != 0) {
     			taldeak.add(deskantzua);
+    			taldeKopurua++;
     		}
     		
     		// Kanpoko eta etxeko taldeak simulatzeko, taldeMultzoa erabiliko da.
     		List<Taldeak> taldeMultzoa = taldeak;
-    		
-    		for (int i = 0; i < taldeak.size() - 1; i++) {
-    			counter++;
-    			Jardunaldiak jardunaldia = new Jardunaldiak();
-    			jardunaldia.setJardunaldi_deskribapena(counter + ". Jardunaldia");
-    			jardunaldia.setPartidu_kopurua(taldeak.size() / 2);
+    		counter = 1;
+    		for (int i = 0; i < taldeKopurua - 1; i++) {
+    			Jardunaldiak jardunaldia = new Jardunaldiak(((counter) + ". Jardunaldia"), taldeKopurua / 2);
     			listaJardunaldiak.add(jardunaldia);
-    			for (int j = 0; j < taldeak.size() / 2; i++) {
-    				Taldeak etxekoTaldea = taldeMultzoa.get(j);
-    				Taldeak kanpokoTaldea = taldeMultzoa.get(taldeak.size() -i - j);
+    			for (int j = 0; j < taldeKopurua / 2; j++) {
+    				Taldeak etxekoTaldea = taldeMultzoa.get(i);
+    				Taldeak kanpokoTaldea = taldeMultzoa.get(taldeKopurua - i - j); //taldeKopurua - i - j
     				
-    				if (!etxekoTaldea.equals(deskantzua) && !kanpokoTaldea.equals(deskantzua)) {
+    				if (!etxekoTaldea.equals(deskantzua) && !kanpokoTaldea.equals(deskantzua) && !etxekoTaldea.equals(kanpokoTaldea)) {
     					Partiduak partidua = new Partiduak(etxekoTaldea.getIzena(), kanpokoTaldea.getIzena(), etxekoTaldea.getZelaia(), jardunaldia);
-    					partiduak.add(partidua);
+    					listaPartiduak.add(partidua);
     				}
     			}
+    			counter++;
     		}
     		
-    		for (int i = 0; i < taldeak.size() - 1; i++) {
-    			counter++;
-    			Jardunaldiak jardunaldia = new Jardunaldiak();
-    			jardunaldia.setJardunaldi_deskribapena(counter + ". Jardunaldia");
-    			jardunaldia.setPartidu_kopurua(taldeak.size() / 2);
+    		for (int i = 0; i < taldeKopurua - 1; i++) {
+    			Jardunaldiak jardunaldia = new Jardunaldiak(((counter) + ". Jardunaldia"), (taldeKopurua / 2));
     			listaJardunaldiak.add(jardunaldia);
-    			for (int j = 0; j < taldeak.size() / 2; i++) {
+    			for (int j = 0; j < taldeKopurua / 2; j++) {
     				Taldeak kanpokoTaldea = taldeMultzoa.get(j);
-    				Taldeak etxekoTaldea = taldeMultzoa.get(taldeak.size() -i - j);
+    				Taldeak etxekoTaldea = taldeMultzoa.get(taldeKopurua - i - j);
     				
-    				if (!etxekoTaldea.equals(deskantzua) && !kanpokoTaldea.equals(deskantzua)) {
+    				if ((!etxekoTaldea.equals(deskantzua) && !kanpokoTaldea.equals(deskantzua)) && !etxekoTaldea.equals(kanpokoTaldea)) {
     					Partiduak partidua = new Partiduak(kanpokoTaldea.getIzena(), etxekoTaldea.getIzena(), kanpokoTaldea.getZelaia(), jardunaldia);
     					listaPartiduak.add(partidua);
     				}
     			}
+    			counter++;
     		}
     		this.jardunaldiak = listaJardunaldiak;
     		this.partiduak = listaPartiduak;

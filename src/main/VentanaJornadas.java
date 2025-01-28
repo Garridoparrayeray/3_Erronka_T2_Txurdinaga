@@ -29,17 +29,11 @@ public class VentanaJornadas extends JFrame {
         // Partiduak sortu eta jornadak ikusi
         List<Jardunaldiak> jardunaldiak = jornadas.getJardunaldiak();
         List<Partiduak> partiduak = jornadas.getPartiduak();
-        boolean hurrengora;
         int counter = 0;
         for (Jardunaldiak jardunaldia : jardunaldiak) {
-        	hurrengora = false;
-        	String izena = jardunaldia.getJardunaldi_deskribapena();
-        	while (hurrengora == false) {
+        	while (counter < partiduak.size()) {
         		if (partiduak.get(counter).getJardunaldiak().equals(jardunaldia)) {
-        			model.addRow(new Object[]{izena, (partiduak.get(counter).getEtxeko_taldea() + " VS " + partiduak.get(counter).getKanpoko_taldea()), ""});
-        		}
-        		else {
-        			hurrengora = true;
+        			model.addRow(new Object[]{partiduak.get(counter).getJardunaldiak().getJardunaldi_deskribapena(), (partiduak.get(counter).getEtxeko_taldea() + " VS " + partiduak.get(counter).getKanpoko_taldea()), ""});
         		}
         		counter++;
         	}
@@ -74,7 +68,6 @@ public class VentanaJornadas extends JFrame {
             }
         });
         getContentPane().add(btnGuardar, BorderLayout.SOUTH);
-        
     }
 
     // Partiduetako emaitza gorde
