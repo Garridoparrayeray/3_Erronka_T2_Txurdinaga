@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Jornada>
+    <Denboraldia>
+        <denboraldi_kod></denboraldi_kod>
+        <hasiera_data></hasiera_data>
+        <amaiera_data></amaiera_data>
+        <jardunaldiak>
+            <jardunaldia>
+                <jardunaldi_kod></jardunaldi_kod>
+                <jardunaldi_deskribapena></jardunaldi_deskribapena>
+                <partidu_kopurua></partidu_kopurua>
+                <patiduak>
+                    <patidua>
+                        <etxeko_taldea></etxeko_taldea>
+                        <kanpoko_taldea></kanpoko_taldea>
+                        <zelaia></zelaia>
+                        <jardunaldi_kod></jardunaldi_kod>
+                    </patidua>
+                </patiduak>
+            </jardunaldia>
+        </jardunaldiak>
+    </Denboraldia>
+</Jornada>

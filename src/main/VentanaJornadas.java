@@ -59,6 +59,8 @@ public class VentanaJornadas extends JFrame {
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	Jornadas jornadas = new Jornadas(TaldeenErabilpena.irakurriTaldeak()); // Asumimos que ya se ha creado el objeto Jornadas
+            	//ExportarXML.exportarJornadasAXML(jornadas, "jornadas.xml");
             		List<Jornadas> jardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();
             		jardunaldiak.add(jornadas);
                 TaldeenErabilpena.jardunaldiakGorde(jardunaldiak);

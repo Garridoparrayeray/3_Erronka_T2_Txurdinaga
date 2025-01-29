@@ -144,12 +144,16 @@ public class Jornadas implements Serializable{
         }
     }
 
-    public void addDenboraldiak (Denboraldiak denboraldia) {
+    public void setDenboraldiak (Denboraldiak denboraldia) {
     	this.denboraldiak = denboraldia;
     }
     
     public Denboraldiak getDenboraldiak () {
     	return denboraldiak;
+    }
+    
+    public void setJardunaldiak (List<Jardunaldiak> jardunaldiak) {
+    	this.jardunaldiak = jardunaldiak;
     }
     
     public void addJardunaldiak (Jardunaldiak jardunaldia) {
@@ -158,6 +162,10 @@ public class Jornadas implements Serializable{
     
     public List<Jardunaldiak> getJardunaldiak () {
     	return jardunaldiak;
+    }
+    
+    public void setPartiduak (List<Partiduak> partiduak) {
+    	this.partiduak = partiduak;
     }
     
     public void addPartiduak (Partiduak partidua) {

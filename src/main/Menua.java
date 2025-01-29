@@ -6,14 +6,18 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import objektuak.Taldeak;
+import objektuak.Denboraldiak;
 import objektuak.Jardunaldiak;
 import objektuak.Jokalariak;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+
+import objektuak.*;
 
 public class Menua extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
@@ -104,7 +108,6 @@ public class Menua extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Gutxienez sei talde egon behar dira.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
             try {
             	Jornadas jardunaldia = new Jornadas(listaTaldea);
             	VentanaJornadas JFrameJoranadas = new VentanaJornadas(jardunaldia);
@@ -143,8 +146,44 @@ public class Menua extends JFrame implements ActionListener {
            JFrame.setVisible(true);
            dispose();
         } else if (o == btnPartiduakJolastu) {
-            PartiduakJolastu JFrame3 = new PartiduakJolastu();
-            JFrame3.setVisible(true);
+        	Jornadas jornadas = new Jornadas();
+        	Denboraldiak denboraldia = new Denboraldiak();
+        	List<Jardunaldiak> jardunaldiak = new ArrayList<Jardunaldiak>();
+        	List<Partiduak>partiduak = new ArrayList<Partiduak>();
+        	
+       // Usar JFileChooser para seleccionar el archivo XML
+          JFileChooser fileChooser = new JFileChooser();
+          fileChooser.setDialogTitle("Seleccionar archivo XML");
+
+          int userSelection = fileChooser.showOpenDialog(this);
+          if (userSelection != JFileChooser.APPROVE_OPTION) {
+              // Si el usuario cancela, no hacemos nada
+         // algo
+          }
+
+          File fileToOpen = fileChooser.getSelectedFile();
+          if (!fileToOpen.exists()) {
+              JOptionPane.showMessageDialog(null, "El archivo seleccionado no existe.");
+              // algo
+          }
+
+          // Crear el objeto ImportarXML y obtener los datos
+          ImportarXML importarXML = new ImportarXML();
+          //jornadas = importarXML.importFromXML(fileToOpen.getAbsolutePath());
+
+          Jornadas jornadaF = new Jornadas();
+          jornadaF.setDenboraldiak(jornadas.getDenboraldiak());
+          jornadaF.setJardunaldiak(jornadas.getJardunaldiak());
+          jornadaF.setPartiduak(jornadas.getPartiduak());
+          // Mostrar mensaje de éxito
+          JOptionPane.showMessageDialog(null, "Archivo XML importado con éxito.");
+
+        	VentanaJornadas JFrameXML = new VentanaJornadas(jornadaF);
+        			//IrteeraSarreraXML JFrameXML = new IrteeraSarreraXML();
+        	JFrameXML.setVisible(true);
+        	
+          //  PartiduakJolastu JFrame3 = new PartiduakJolastu();
+            //JFrame3.setVisible(true);
             dispose();
         } else if (o == btnKlasifikazioa) {
             JOptionPane.showMessageDialog(this, "Lehengo sartu behar dituzu datuak", "Errorea", JOptionPane.ERROR_MESSAGE);
