@@ -114,4 +114,3 @@ public class Pertsona implements Serializable{
         jokalari;
     }
 }
-

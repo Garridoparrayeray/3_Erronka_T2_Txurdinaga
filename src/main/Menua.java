@@ -146,39 +146,9 @@ public class Menua extends JFrame implements ActionListener {
            JFrame.setVisible(true);
            dispose();
         } else if (o == btnPartiduakJolastu) {
-        	Jornadas jornadas = new Jornadas();
-        	Denboraldiak denboraldia = new Denboraldiak();
-        	List<Jardunaldiak> jardunaldiak = new ArrayList<Jardunaldiak>();
-        	List<Partiduak>partiduak = new ArrayList<Partiduak>();
-        	
-       // Usar JFileChooser para seleccionar el archivo XML
-          JFileChooser fileChooser = new JFileChooser();
-          fileChooser.setDialogTitle("Seleccionar archivo XML");
-
-          int userSelection = fileChooser.showOpenDialog(this);
-          if (userSelection != JFileChooser.APPROVE_OPTION) {
-              // Si el usuario cancela, no hacemos nada
-         // algo
-          }
-
-          File fileToOpen = fileChooser.getSelectedFile();
-          if (!fileToOpen.exists()) {
-              JOptionPane.showMessageDialog(null, "El archivo seleccionado no existe.");
-              // algo
-          }
-
-          // Crear el objeto ImportarXML y obtener los datos
-          ImportarXML importarXML = new ImportarXML();
-          //jornadas = importarXML.importFromXML(fileToOpen.getAbsolutePath());
-
-          Jornadas jornadaF = new Jornadas();
-          jornadaF.setDenboraldiak(jornadas.getDenboraldiak());
-          jornadaF.setJardunaldiak(jornadas.getJardunaldiak());
-          jornadaF.setPartiduak(jornadas.getPartiduak());
           // Mostrar mensaje de éxito
-          JOptionPane.showMessageDialog(null, "Archivo XML importado con éxito.");
-
-        	VentanaJornadas JFrameXML = new VentanaJornadas(jornadaF);
+          Jornadas jornada = IrteeraSarreraXML.SarreraXML();
+        	VentanaJornadas JFrameXML = new VentanaJornadas(jornada);
         			//IrteeraSarreraXML JFrameXML = new IrteeraSarreraXML();
         	JFrameXML.setVisible(true);
         	

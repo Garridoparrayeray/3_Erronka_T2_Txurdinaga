@@ -15,8 +15,8 @@ import main.*;
 public class Denboraldiak implements Serializable {
 	private int denboraldi_kod;
 	private String denboraldi_Izena;
-	private LocalDate hasiera_data;
-	private LocalDate amaiera_data;
+	private String hasiera_data;
+	private String amaiera_data;
 	private int jardunaldi_kopurua;
 	
 	private List<Jornadas> listaJardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();
@@ -29,7 +29,7 @@ public class Denboraldiak implements Serializable {
 		this.jardunaldi_kopurua = 0;
 	}
 	
-	public Denboraldiak(String denboraldi_Izena, LocalDate hasiera_data, LocalDate amaiera_data) {
+	public Denboraldiak(String denboraldi_Izena, String hasiera_data, String amaiera_data) {
 		this.denboraldi_kod = automatikoa();
 		this.denboraldi_Izena = denboraldi_Izena;
 		this.hasiera_data = hasiera_data;
@@ -37,7 +37,7 @@ public class Denboraldiak implements Serializable {
 		this.jardunaldi_kopurua = 0;
 	}
 	
-	public Denboraldiak (int denboraldi_kod, String denboraldi_Izena, LocalDate hasiera_data, LocalDate amaiera_data, int jardunaldi_kopurua) {
+	public Denboraldiak (int denboraldi_kod, String denboraldi_Izena, String hasiera_data, String amaiera_data, int jardunaldi_kopurua) {
 		this.denboraldi_kod = denboraldi_kod;
 		this.denboraldi_Izena = denboraldi_Izena;
 		this.hasiera_data = hasiera_data;
@@ -55,8 +55,9 @@ public class Denboraldiak implements Serializable {
 	
 	public int automatikoa() {
 		List<Denboraldiak> denboraldiak = new ArrayList<Denboraldiak>();
+		List<Jornadas> listaJornadas = TaldeenErabilpena.jardunaldiakIrakurri();
 		for (Jornadas jardunaldia : listaJardunaldiak) {
-			denboraldiak.add(jardunaldia.getDenboraldiak());
+			denboraldiak.add(jardunaldia.getDenboraldia());
 		}
 		boolean errepikatua;
 		boolean amaiera = false;
@@ -74,7 +75,7 @@ public class Denboraldiak implements Serializable {
 				return hasiera;
 			}
 		}
-		return 0;
+		return 10;
 	}
 	
 	public String toString() {
@@ -120,19 +121,19 @@ public class Denboraldiak implements Serializable {
 		this.denboraldi_Izena = denboraldi_Izena;
 	}
 
-	public LocalDate getHasiera_data() {
+	public String getHasiera_data() {
 		return hasiera_data;
 	}
 
-	public void setHasiera_data(LocalDate hasiera_data) {
+	public void setHasiera_data(String hasiera_data) {
 		this.hasiera_data = hasiera_data;
 	}
 
-	public LocalDate getAmaiera_data() {
+	public String getAmaiera_data() {
 		return amaiera_data;
 	}
 
-	public void setAmaiera_data(LocalDate amaiera_data) {
+	public void setAmaiera_data(String amaiera_data) {
 		this.amaiera_data = amaiera_data;
 	}
 

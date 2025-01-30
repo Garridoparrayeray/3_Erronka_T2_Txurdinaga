@@ -62,14 +62,14 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     				for (int i = 0; i < (listaTaldeak.size()) / 2; i++) {
     					if (counter != partiduak.size()) {
     						Partiduak partidua = partiduak.get(counter);
-        				String taldeA = partidua.getEtxeko_taldea();
-        				String taldeB = partidua.getKanpoko_taldea();
+        				Taldeak taldeA = partidua.getEtxeko_taldea();
+        				Taldeak taldeB = partidua.getKanpoko_taldea();
         				JMenuItem partiduakMenu = new JMenuItem(taldeA + " VS " + taldeB);
         				partiduakMenu.addActionListener(new ActionListener() {
     							
     							@Override
     							public void actionPerformed(ActionEvent e) {
-    								puntuazioaSartu(partiduakMenu, taldeA, taldeB);
+    								puntuazioaSartu(partiduakMenu, taldeA.getIzena(), taldeB.getIzena());
     							}
     						});
         				menu.add(partiduakMenu);

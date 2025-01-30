@@ -1,5 +1,200 @@
 package main;
 
+import objektuak.Denboraldiak;
+import objektuak.Jardunaldiak;
+import objektuak.Partiduak;
+import objektuak.Taldeak;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Jornadas implements Serializable {
+	private Denboraldiak denboraldia;
+	private List<Jardunaldiak> jardunaldiak;
+	private List<Partiduak> partiduak;
+	private List<Taldeak> taldeak; 
+	
+	public Jornadas() {
+		this.denboraldia = new Denboraldiak();
+		this.jardunaldiak = new ArrayList<Jardunaldiak>();
+		this.partiduak = new ArrayList<Partiduak>();
+		this.taldeak = new ArrayList<Taldeak>();
+	}
+	
+	public Jornadas(Denboraldiak denboraldiak, List<Jardunaldiak> jardunaldiak, List<Partiduak> partiduak, List<Taldeak> taldeak) {
+		this.denboraldia = denboraldiak;
+		this.jardunaldiak = jardunaldiak;
+		this.partiduak = partiduak;
+		this.taldeak = taldeak;
+	}
+	
+	public Jornadas(List<Taldeak> taldeak) {
+		Denboraldiak denboraldiDatua = new Denboraldiak();
+		List<Jardunaldiak> jardunaldiakDatua = new ArrayList<Jardunaldiak>();
+		List<Partiduak> partiduakDatua = new ArrayList<Partiduak>();
+		
+		// Denboraldiak sortzeko beharrezko datuak eskatzeko:
+		int numEquipos = taldeak.size();
+        boolean tieneDescanso = false;
+        JPanel denboraldiPanela = new JPanel(new GridLayout(3, 2));
+        JLabel izenaEskaera = new JLabel("Denboraldiaren Izena: ");
+    	JTextField izenaSartu = new JTextField();
+    	JLabel hasieraDataEskaera = new JLabel("Hasiera Data: ");
+        JTable taula = new JTable(1, 3);
+        JLabel amaieraDataEskaera = new JLabel("Amaiera Data: ");
+        JTable taula2 = new JTable(1, 3);
+        denboraldiPanela.add(izenaEskaera);
+        denboraldiPanela.add(izenaSartu);
+        denboraldiPanela.add(hasieraDataEskaera);
+        denboraldiPanela.add(taula);
+        denboraldiPanela.add(amaieraDataEskaera);
+        denboraldiPanela.add(taula2);
+        
+        JOptionPane.showMessageDialog(null, denboraldiPanela, "Denboraldia Sartzeko", JOptionPane.OK_CANCEL_OPTION);
+    	String urteaH = taula.getValueAt(0, 0) + "";
+    	String hilabeteaH = taula.getValueAt(0, 1) + "";
+    	String egunaH = taula.getValueAt(0, 2) + "";
+    	String urteaA = taula2.getValueAt(0, 0) + "";
+    	String hilabeteaA = taula2.getValueAt(0, 1) + "";
+    	String egunaA = taula2.getValueAt(0, 2) + "";
+    	String izena = izenaSartu.getText();
+    	//String hasieraData = urteaH + "-" + hilabeteaH + "-" + egunaH;
+    	//String amaieraData = urteaA + "-" + hilabeteaA + "-" + egunaA;
+    	String hasieraData = urteaH + "-" + hilabeteaH + "-" + egunaH;
+    	String amaieraData = urteaA + "-" + hilabeteaA + "-" + egunaA;
+    	denboraldiDatua.setDenboraldi_Izena(izena);
+    	denboraldiDatua.setHasiera_data(hasieraData);
+    	denboraldiDatua.setAmaiera_data(amaieraData);
+    	
+    	Taldeak deskantzua = new Taldeak();
+    	if (taldeak.size() % 2 != 0) {
+    		taldeak.add(deskantzua);
+    		tieneDescanso = true;
+    	}
+
+    	List<Taldeak> listaTaldeak = new ArrayList<>(taldeak);
+    	Taldeak equipoFijo = listaTaldeak.remove(0);  // ???
+    	
+    	// Puede dar error con el .size()
+    	int counter = 0;
+    	int counter2 = 0;
+    	for (int i = 0; i < (taldeak.size() - 1); i++) {
+    		String jardunaldiHasieraData = randomData();
+    		String jardunaldiAmaieraData = randomData();
+    		
+    		Jardunaldiak jardunaldia = new Jardunaldiak(((counter + 1)  + ". Jardunaldia"), jardunaldiHasieraData, jardunaldiAmaieraData, denboraldia);
+    		
+    		for (int j = 0; j < taldeak.size() / 2; j++) {
+                Taldeak etxekoa = (j == 0) ? equipoFijo : listaTaldeak.get(j - 1);
+                Taldeak kanpokoa = listaTaldeak.get(numEquipos - 2 - j);
+
+                if (!etxekoa.equals(deskantzua) && !kanpokoa.equals(deskantzua)) {
+                    Partiduak partido = new Partiduak(etxekoa, kanpokoa, etxekoa.getZelaia(), jardunaldia);
+                    partiduakDatua.add(partido);
+                    counter2++;
+                }
+                if (j == (taldeak.size() / 2) - 1) {
+                	//System.out.println(counter2);
+                	jardunaldia.setPartidu_kopurua(counter2);
+                	counter2 = 0;
+                }
+            }
+    		Collections.rotate(listaTaldeak, 1);
+    		jardunaldiakDatua.add(jardunaldia);
+    		counter++;
+    	}
+    	
+    	
+    	for (int i = 0; i < (taldeak.size() - 1); i++) {
+    		String jardunaldiHasieraData = randomData();
+    		String jardunaldiAmaieraData = randomData();
+    		
+    		Jardunaldiak jardunaldia = new Jardunaldiak(((counter + 1)  + ". Jardunaldia"), jardunaldiHasieraData, jardunaldiAmaieraData, denboraldia);
+    		
+    		for (int j = 0; j < taldeak.size() / 2; j++) {
+                Taldeak kanpokoa = (j == 0) ? equipoFijo : listaTaldeak.get(j - 1);
+                Taldeak etxekoa = listaTaldeak.get(numEquipos - 2 - j);
+
+                if (!etxekoa.equals(deskantzua) && !kanpokoa.equals(deskantzua)) {
+                    Partiduak partido = new Partiduak(etxekoa, kanpokoa, etxekoa.getZelaia(), jardunaldia);
+                    partiduakDatua.add(partido);
+                    counter2++;
+                }
+                if (j == (taldeak.size() / 2) - 1) {
+                	jardunaldia.setPartidu_kopurua(counter2);
+                	//System.out.println(counter2);
+                	counter2 = 0;
+                }
+            }
+    		Collections.rotate(listaTaldeak, 1);
+    		jardunaldiakDatua.add(jardunaldia);
+    		counter++;
+    		if (tieneDescanso == true) {
+    			taldeak.remove(taldeak.size() - 1);
+    			tieneDescanso = false;
+    		}
+    	}
+    	this.denboraldia = denboraldiDatua;
+		this.jardunaldiak = jardunaldiakDatua;
+		this.partiduak = partiduakDatua;
+		this.taldeak = taldeak;
+    	/*System.out.println("Número total de jornadas creadas: " + jardunaldiak.size());
+    	for (Jardunaldiak j : jardunaldiak) {
+    	    System.out.println(j.getJardunaldi_deskribapena() + " - Partidos: " + j.getPartidu_kopurua());
+    	}*/
+    	//System.out.println(jardunaldiak.size());
+    	//System.out.println(partiduak.size());
+	}
+	
+	public String randomData() {
+		return "2012-06-12";
+	}
+	
+	public void setDenboraldia(Denboraldiak denboraldia) {
+		this.denboraldia = denboraldia;
+	}
+	
+	public Denboraldiak getDenboraldia() {
+		return this.denboraldia;
+	}
+	
+	public void setJardunaldiak(List<Jardunaldiak> jardunaldiak) {
+		this.jardunaldiak = jardunaldiak;
+	}
+	
+	public void addJardunaldia (Jardunaldiak jardunaldia) {
+		this.jardunaldiak.add(jardunaldia);
+	}
+	
+	public List<Jardunaldiak> getJardunaldiak() {
+		return this.jardunaldiak;
+	}
+	
+	public void setPartiduak(List<Partiduak> partiduak) {
+		this.partiduak = partiduak;
+	}
+	
+	public void addPartiduak (Partiduak partidua) {
+		this.partiduak.add(partidua);
+	}
+	
+	public List<Partiduak> getPartiduak() {
+		return this.partiduak;
+	}
+	
+	// Behin denboraldi bat hasita, ezin dira taldeak aldatu
+	public List<Taldeak> getTaldeak(){
+		return this.taldeak;
+	}
+}
+
+/*package main;
+
 import java.awt.GridLayout;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -24,12 +219,13 @@ public class Jornadas implements Serializable{
     private List<Jardunaldiak> jardunaldiak;
     private List<Partiduak> partiduak;
     
+    // Eraikitzaileak: 
     public Jornadas() {
 			this.denboraldiak = new Denboraldiak();
 			this.jardunaldiak = new ArrayList<Jardunaldiak>();
 			this.partiduak = new ArrayList<Partiduak>();
-		}
-
+	}
+    
     public Jornadas(List<Taldeak> taldeak) {
         if (taldeak.size() < 6) {
             throw new IllegalArgumentException("Deben haber al menos 6 equipos para generar la temporada.");
@@ -62,15 +258,7 @@ public class Jornadas implements Serializable{
         boolean zenbakiakE = false;
         String konprobatzeko;
         char c;
-       /*for (int i = 0; i < 3; i++) {
-      	 konprobatzeko = taula.getValueAt(1, i).toString();
-        	for (int i2 = 0; i2 < konprobatzeko.length(); i2++) {
-        		c = konprobatzeko.charAt(i2);
-        		if (!Character.isDigit(c)) {
-        			zenbakiakE = true;
-        		}
-        	}
-        }*/
+       
         
         if (zenbakiakE == false) {
         	String izena = izenaSartu.getText();
@@ -166,151 +354,6 @@ public class Jornadas implements Serializable{
     
     public void setPartiduak (List<Partiduak> partiduak) {
     	this.partiduak = partiduak;
-    }
-    
-    public void addPartiduak (Partiduak partidua) {
-    	partiduak.add(partidua);
-    }
-    
-    public List<Partiduak> getPartiduak () {
-    	return partiduak;
-    }
-}
-
-/*package main;
-
-import java.awt.GridLayout;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-
-import objektuak.*;
-
-public class Jornadas implements Serializable{
-		private Denboraldiak denboraldiak;
-		private List<Jardunaldiak> jardunaldiak;
-		private List<Partiduak> partiduak;
-		
-		public Jornadas() {
-			this.denboraldiak = new Denboraldiak();
-			this.jardunaldiak = new ArrayList<Jardunaldiak>();
-			this.partiduak = new ArrayList<Partiduak>();
-		}
-		
-    public Jornadas (List<Taldeak> taldeak) {
-    	List<Jardunaldiak> listaJardunaldiak = new ArrayList<Jardunaldiak>();
-    	List<Partiduak> listaPartiduak = new ArrayList<Partiduak>();
-  		Taldeak deskantzua = new Taldeak();
-  		int counter = 1;
-    		JPanel denboraldiPanela = new JPanel(new GridLayout(3, 2));
-    		JLabel izenaEskaera = new JLabel("Denboraldiaren Izena: ");
-    		JTextField izenaSartu = new JTextField();
-    		JLabel hasieraDataEskaera = new JLabel("Hasiera Data: ");
-        JTable taula = new JTable(1, 3);
-        JLabel amaieraDataEskaera = new JLabel("Amaiera Data: ");
-        JTable taula2 = new JTable(1, 3);
-        denboraldiPanela.add(izenaEskaera);
-        denboraldiPanela.add(izenaSartu);
-        denboraldiPanela.add(hasieraDataEskaera);
-        denboraldiPanela.add(taula);
-        denboraldiPanela.add(amaieraDataEskaera);
-        denboraldiPanela.add(taula2);
-        
-        JOptionPane.showMessageDialog(null, denboraldiPanela, "Denboraldia Sartzeko", JOptionPane.OK_CANCEL_OPTION);
-        boolean zenbakiakE = false;
-       /* for (int i = 0; i < 3; i++) {
-        	konrpobatzeko = taula.getValueAt(i, 1).toString();
-        	for (int i2 = 0; i2 < konrpobatzeko.length(); i2++) {
-        		c = konrpobatzeko.charAt(i2);
-        		if (!Character.isDigit(c)) {
-        			zenbakiakE = true;
-        		}
-        	}
-        }/*
-        
-        if (zenbakiakE == false) {
-        	String izena = izenaSartu.getText();
-        	int urteaH = Integer.valueOf(taula.getValueAt(0, 0).toString());
-        	int hilabeteaH = Integer.valueOf(taula.getValueAt(0, 1).toString());
-        	int egunaH = Integer.valueOf(taula.getValueAt(0, 2).toString());
-        	int urteaA = Integer.valueOf(taula2.getValueAt(0, 0).toString());
-        	int hilabeteaA = Integer.valueOf(taula2.getValueAt(0, 1).toString());
-        	int egunaA = Integer.valueOf(taula2.getValueAt(0, 2).toString());
-        	LocalDate hasieraData = LocalDate.of(urteaH, hilabeteaH, egunaH);
-        	LocalDate amaieraData = LocalDate.of(urteaA, hilabeteaA, egunaA);
-        	//LocalDate hasieraData = LocalDate.of(urteaH, hilabeteaH, egunaH);
-        	//LocalDate amaieraData = LocalDate.of(urteaA, hilabeteaA, egunaA);
-        	Denboraldiak denboraldia = new Denboraldiak(izena, hasieraData, amaieraData);
-        	this.denboraldiak = denboraldia;
-        }
-        else {
-        	JOptionPane.showMessageDialog(null, "Datarako, bakarrik zenbaki osoak sartu ahal dira. Berriro saiatu mesedez.", "Datak Sartzeko Errorea", JOptionPane.ERROR_MESSAGE);
-        }
-    		
-        int taldeKopurua = taldeak.size() - 1;
-        
-    		if (taldeKopurua + 1 % 2 != 0) {
-    			taldeak.add(deskantzua);
-    			taldeKopurua++;
-    		}
-    		
-    		// Kanpoko eta etxeko taldeak simulatzeko, taldeMultzoa erabiliko da.
-    		List<Taldeak> taldeMultzoa = taldeak;
-    		counter = 1;
-    		for (int i = 0; i < taldeKopurua - 1; i++) {
-    			Jardunaldiak jardunaldia = new Jardunaldiak(((counter) + ". Jardunaldia"), taldeKopurua / 2);
-    			listaJardunaldiak.add(jardunaldia);
-    			for (int j = 0; j < taldeKopurua / 2; j++) {
-    				Taldeak etxekoTaldea = taldeMultzoa.get(i);
-    				Taldeak kanpokoTaldea = taldeMultzoa.get(taldeKopurua - i - j); //taldeKopurua - i - j
-    				
-    				if (!etxekoTaldea.equals(deskantzua) && !kanpokoTaldea.equals(deskantzua) && !etxekoTaldea.equals(kanpokoTaldea)) {
-    					Partiduak partidua = new Partiduak(etxekoTaldea.getIzena(), kanpokoTaldea.getIzena(), etxekoTaldea.getZelaia(), jardunaldia);
-    					listaPartiduak.add(partidua);
-    				}
-    			}
-    			counter++;
-    		}
-    		
-    		for (int i = 0; i < taldeKopurua - 1; i++) {
-    			Jardunaldiak jardunaldia = new Jardunaldiak(((counter) + ". Jardunaldia"), (taldeKopurua / 2));
-    			listaJardunaldiak.add(jardunaldia);
-    			for (int j = 0; j < taldeKopurua / 2; j++) {
-    				Taldeak kanpokoTaldea = taldeMultzoa.get(j);
-    				Taldeak etxekoTaldea = taldeMultzoa.get(taldeKopurua - i - j);
-    				
-    				if ((!etxekoTaldea.equals(deskantzua) && !kanpokoTaldea.equals(deskantzua)) && !etxekoTaldea.equals(kanpokoTaldea)) {
-    					Partiduak partidua = new Partiduak(kanpokoTaldea.getIzena(), etxekoTaldea.getIzena(), kanpokoTaldea.getZelaia(), jardunaldia);
-    					listaPartiduak.add(partidua);
-    				}
-    			}
-    			counter++;
-    		}
-    		this.jardunaldiak = listaJardunaldiak;
-    		this.partiduak = listaPartiduak;
-    }
-    
-    public void addDenboraldiak (Denboraldiak denboraldia) {
-    	this.denboraldiak = denboraldia;
-    }
-    
-    public Denboraldiak getDenboraldiak () {
-    	return denboraldiak;
-    }
-    
-    public void addJardunaldiak (Jardunaldiak jardunaldia) {
-    	jardunaldiak.add(jardunaldia);
-    }
-    
-    public List<Jardunaldiak> getJardunaldiak () {
-    	return jardunaldiak;
     }
     
     public void addPartiduak (Partiduak partidua) {

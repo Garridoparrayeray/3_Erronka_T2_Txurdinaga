@@ -12,21 +12,21 @@ import main.TaldeenErabilpena;
 
 public class Partiduak implements Serializable {
 		private int partidu_kod;
-		private String etxeko_taldea;
-		private String kanpoko_taldea;
+		private Taldeak etxeko_taldea;
+		private Taldeak kanpoko_taldea;
 		private String zelaia;
-		private LocalDate partidudata;
+		private String partidudata;
 		private int etxekoTaldekoPuntuazioa;
 		private int kanpokoTaldekoPuntuazioa;
 		
 		private Jardunaldiak jardunaldia;
 		
-		private int counter = 0;
+		private int counter = 1;
 		
 		public Partiduak() {
 			this.partidu_kod = automatikoa();
-			this.etxeko_taldea = "";
-			this.kanpoko_taldea = "";
+			this.etxeko_taldea = new Taldeak();
+			this.kanpoko_taldea = new Taldeak();
 			this.zelaia = "";
 			this.partidudata = null;
 			this.etxekoTaldekoPuntuazioa = 0;
@@ -34,7 +34,7 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = new Jardunaldiak();
 		}
 		
-		public Partiduak(String etxeko_taldea, String kanpoko_taldea, String zelaia, Jardunaldiak jardunaldia) {
+		public Partiduak(Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, Jardunaldiak jardunaldia) {
 			this.partidu_kod = automatikoa();;
 			this.etxeko_taldea = etxeko_taldea;
 			this.kanpoko_taldea = kanpoko_taldea;
@@ -45,7 +45,18 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = jardunaldia;
 		}
 		
-		public Partiduak(int partidu_kod, String etxeko_taldea, String kanpoko_taldea, String zelaia, LocalDate partidudata, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
+		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, Jardunaldiak jardunaldia) {
+			this.partidu_kod = partidu_kod;
+			this.etxeko_taldea = etxeko_taldea;
+			this.kanpoko_taldea = kanpoko_taldea;
+			this.zelaia = zelaia;
+			this.partidudata = null;
+			this.etxekoTaldekoPuntuazioa = 0;
+			this.kanpokoTaldekoPuntuazioa = 0;
+			this.jardunaldia = jardunaldia;
+		}
+		
+		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, String partidudata, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
 			this.partidu_kod = partidu_kod;
 			this.etxeko_taldea = etxeko_taldea;
 			this.kanpoko_taldea = kanpoko_taldea;
@@ -53,7 +64,7 @@ public class Partiduak implements Serializable {
 			this.partidudata = partidudata;
 			this.etxekoTaldekoPuntuazioa = etxekoTaldekoPuntuazioa;
 			this.kanpokoTaldekoPuntuazioa = kanpokoTaldekoPuntuazioa;
-			this.jardunaldia = new Jardunaldiak();
+			this.jardunaldia = jardunaldia;
 		}
 		
 		public Partiduak(Partiduak bestea) {
@@ -64,7 +75,7 @@ public class Partiduak implements Serializable {
 			this.partidudata = bestea.partidudata;
 			this.etxekoTaldekoPuntuazioa = bestea.etxekoTaldekoPuntuazioa;
 			this.kanpokoTaldekoPuntuazioa = bestea.kanpokoTaldekoPuntuazioa;
-			this.jardunaldia = new Jardunaldiak();
+			this.jardunaldia = bestea.jardunaldia;
 		}
 		
 		public int automatikoa() {
@@ -90,7 +101,8 @@ public class Partiduak implements Serializable {
 					return hasiera;
 				}
 			}
-			return 0;
+			counter++;
+			return counter;
 		}
 		
 		public String toString() {
@@ -128,19 +140,19 @@ public class Partiduak implements Serializable {
 			this.partidu_kod = partidu_kod;
 		}
 
-		public String getEtxeko_taldea() {
+		public Taldeak getEtxeko_taldea() {
 			return etxeko_taldea;
 		}
 
-		public void setEtxeko_taldea(String etxeko_taldea) {
+		public void setEtxeko_taldea(Taldeak etxeko_taldea) {
 			this.etxeko_taldea = etxeko_taldea;
 		}
 
-		public String getKanpoko_taldea() {
+		public Taldeak getKanpoko_taldea() {
 			return kanpoko_taldea;
 		}
 
-		public void setKanpoko_taldea(String kanpoko_taldea) {
+		public void setKanpoko_taldea(Taldeak kanpoko_taldea) {
 			this.kanpoko_taldea = kanpoko_taldea;
 		}
 
@@ -152,11 +164,11 @@ public class Partiduak implements Serializable {
 			this.zelaia = zelaia;
 		}
 
-		public LocalDate getPartidudata() {
+		public String getPartidudata() {
 			return partidudata;
 		}
 
-		public void setPartidudata(LocalDate partidudata) {
+		public void setPartidudata(String partidudata) {
 			this.partidudata = partidudata;
 		}
 

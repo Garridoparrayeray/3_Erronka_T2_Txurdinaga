@@ -26,59 +26,36 @@ public class VentanaJornadas extends JFrame {
         model.addColumn("Partido");
         model.addColumn("Resultado");
         
-        // Partiduak sortu eta jornadak ikusi
+        // Beharrezkoa da:
+        Denboraldiak denboraldia = jornadas.getDenboraldia();
         List<Jardunaldiak> jardunaldiak = jornadas.getJardunaldiak();
         List<Partiduak> partiduak = jornadas.getPartiduak();
-        int counter = 0;
-        for (Jardunaldiak jardunaldia : jardunaldiak) {
-        	while (counter < partiduak.size()) {
-        		if (partiduak.get(counter).getJardunaldiak().equals(jardunaldia)) {
-        			model.addRow(new Object[]{partiduak.get(counter).getJardunaldiak().getJardunaldi_deskribapena(), (partiduak.get(counter).getEtxeko_taldea() + " VS " + partiduak.get(counter).getKanpoko_taldea()), ""});
-        		}
-        		counter++;
-        	}
-        }
         
-        /*for (int i = 0; i < jardunaldia.size() - 2; i++) {
-        	String jornadaIzena = ja;
-        	for (String partido : jornada) {
-            model.addRow(new Object[]{jornadaIzena, partido, ""});
-        	}
-        }*/
-
-        // taula berria
         table = new JTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(500, 300));
         table.setFillsViewportHeight(true);
 
         JScrollPane scrollPane = new JScrollPane(table);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
+        int counter = 0;
+        for (int i = 0; i < jardunaldiak.size(); i++) {
+        	Jardunaldiak jardunaldia = jardunaldiak.get(i);
+        	for (int i2 = 0; i2 < jardunaldia.getPartidu_kopurua(); i2++) {
+        		Partiduak partidua = partiduak.get(counter);
+        		model.addRow(new Object[]{partidua.getJardunaldiak().getJardunaldi_deskribapena(), (partidua.getEtxeko_taldea().getIzena() + " VS " + partidua.getKanpoko_taldea().getIzena()), ""});
+        		counter++;
+        	}
+        	
+        }
 
-        // Botón para guardar los resultados
+        // Jornadas exportatzeko optzioa
         JButton btnGuardar = new JButton("Guardar Resultados");
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	Jornadas jornadas = new Jornadas(TaldeenErabilpena.irakurriTaldeak()); // Asumimos que ya se ha creado el objeto Jornadas
-            	//ExportarXML.exportarJornadasAXML(jornadas, "jornadas.xml");
-            		List<Jornadas> jardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();
-            		jardunaldiak.add(jornadas);
-                TaldeenErabilpena.jardunaldiakGorde(jardunaldiak);
-                VentanaJornadas JFrameEguneratua = new VentanaJornadas(jornadas);
-                JFrameEguneratua.setVisible(true);
-                dispose()	;
+            	IrteeraSarreraXML.IrteeraXML(jornadas);
             }
         });
         getContentPane().add(btnGuardar, BorderLayout.SOUTH);
-    }
-
-    // Partiduetako emaitza gorde
-    private void guardarResultados() {
-        for (int i = 0; i < model.getRowCount(); i++) {
-        	String jornada = (String) model.getValueAt(i, 0);
-            String partido = (String) model.getValueAt(i, 1);
-            String resultado = (String) model.getValueAt(i, 2);
-            System.out.println(partido + " - Resultado: " + resultado);
-        }
     }
 }

@@ -156,5 +156,3 @@ public class Klasifikazioa extends JFrame {
  }
 }
 
-
-

@@ -8,7 +8,7 @@ public class Taldeak implements Serializable{
 	private int taldekod;
 	private String zelaia;
 	private String herrialdea;
-	private int incrementar = 0;
+	private int incrementar = 20;
   
 
 public Taldeak() {

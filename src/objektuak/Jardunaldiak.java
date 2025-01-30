@@ -10,8 +10,8 @@ import main.TaldeenErabilpena;
 public class Jardunaldiak  implements Serializable{
 	private int jardunaldi_kod;
 	private String jardunaldi_deskribapena;
-	private LocalDate hasiera_data;
-	private LocalDate amaiera_data;
+	private String hasiera_data;
+	private String amaiera_data;
 	private int partidu_kopurua;
 	private Denboraldiak denboraldia;
 	
@@ -33,22 +33,31 @@ public class Jardunaldiak  implements Serializable{
 		this.denboraldia = denboraldia;
 	}
 	
-	public Jardunaldiak(String jardunaldi_deskribapena, int partidu_kopurua) {
+	public Jardunaldiak(String jardunaldi_deskribapena, String hasiera_data, String amaiera_data, Denboraldiak denboraldia) {
 		this.jardunaldi_kod = automatikoa();
 		this.jardunaldi_deskribapena = jardunaldi_deskribapena;
-		this.hasiera_data = null;
-		this.amaiera_data = null;
-		this.partidu_kopurua = partidu_kopurua;
-		this.denboraldia = new Denboraldiak();
+		this.hasiera_data = hasiera_data;
+		this.amaiera_data = amaiera_data;
+		this.partidu_kopurua = 0;
+		this.denboraldia = denboraldia;
 	}
 	
-	public Jardunaldiak(int jardunaldi_kod, String jardunaldi_deskribapena, LocalDate hasiera_data, LocalDate amaiera_data, int partidu_kopurua) {
+	public Jardunaldiak(int jardunaldi_kod, String jardunaldi_deskribapena, String hasiera_data, String amaiera_data, Denboraldiak denboraldia) {
+		this.jardunaldi_kod = jardunaldi_kod;
+		this.jardunaldi_deskribapena = jardunaldi_deskribapena;
+		this.hasiera_data = hasiera_data;
+		this.amaiera_data = amaiera_data;
+		this.partidu_kopurua = 0;
+		this.denboraldia = denboraldia;
+	}
+	
+	public Jardunaldiak(int jardunaldi_kod, String jardunaldi_deskribapena, String hasiera_data, String amaiera_data, int partidu_kopurua, Denboraldiak denboraldia) {
 		this.jardunaldi_kod = jardunaldi_kod;
 		this.jardunaldi_deskribapena = jardunaldi_deskribapena;
 		this.hasiera_data = hasiera_data;
 		this.amaiera_data = amaiera_data;
 		this.partidu_kopurua = partidu_kopurua;
-		this.denboraldia = new Denboraldiak();
+		this.denboraldia = denboraldia;
 	}
 	
 	public Jardunaldiak (Jardunaldiak bestea) {
@@ -83,7 +92,7 @@ public class Jardunaldiak  implements Serializable{
 					return hasiera;
 				}
 		}
-		return 0;
+		return 10;
 	}
 	
 	public String toString() {
@@ -129,19 +138,19 @@ public boolean equals(Object bestea) {
 		this.jardunaldi_deskribapena = jardunaldi_deskribapena;
 	}
 
-	public LocalDate getHasiera_data() {
+	public String getHasiera_data() {
 		return hasiera_data;
 	}
 
-	public void setHasiera_data(LocalDate hasiera_data) {
+	public void setHasiera_data(String hasiera_data) {
 		this.hasiera_data = hasiera_data;
 	}
 
-	public LocalDate getAmaiera_data() {
+	public String getAmaiera_data() {
 		return amaiera_data;
 	}
 
-	public void setAmaiera_data(LocalDate amaiera_data) {
+	public void setAmaiera_data(String amaiera_data) {
 		this.amaiera_data = amaiera_data;
 	}
 
