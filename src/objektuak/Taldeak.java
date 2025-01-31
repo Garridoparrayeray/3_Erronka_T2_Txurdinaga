@@ -1,29 +1,41 @@
 package objektuak;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Taldeak {
+public class Taldeak implements Serializable{
 	private String izena;
 	private int taldekod;
+	private String zelaia;
 	private String herrialdea;
-	private int incrementar = 0;
+	private int incrementar = 20;
   
 
 public Taldeak() {
 	this.izena = "";
 	this.taldekod = incrementar++;
+	this.zelaia = "";
 	this.herrialdea = "";
 }
 
-public Taldeak (String izena, int taldekod, String herrialdea) {
+public Taldeak (int taldekod, String izena, String zelaia) {
 	this.izena = izena;
-	this.taldekod = incrementar++;
+	this.taldekod = taldekod;
+	this.zelaia = zelaia;
+	this.herrialdea = "";
+}
+
+public Taldeak (int taldeKod, String izena, String zelaia, String herrialdea) {
+	this.taldekod = taldeKod;
+	this.izena = izena;
+	this.zelaia = zelaia;
 	this.herrialdea = herrialdea;
 }
 
 public Taldeak (Taldeak beste) {
 	this.izena = beste.izena;
 	this.taldekod = beste.taldekod;
+	this.zelaia = beste.zelaia;
 	this.herrialdea = beste.herrialdea;
 }
 
@@ -55,6 +67,14 @@ public int getIncrementar() {
 	return incrementar;
 }
 
+public String getZelaia() {
+	return zelaia;
+}
+
+public void setZelaia(String zelaia) {
+	this.zelaia = zelaia;
+}
+
 public void setIncrementar(int incrementar) {
 	this.incrementar = incrementar;
 }
@@ -66,7 +86,7 @@ public int hashCode() {
 
 @Override
 public String toString() {
-	return "Taldeak [izena=" + izena + ", taldekod=" + taldekod + ", herrialdea=" + herrialdea + ", incrementar="
+	return "Taldeak [taldekod=" + taldekod + ", izena=" + izena + ", herrialdea=" + herrialdea + "]"
 			+ incrementar + "]";
 }
 
@@ -85,6 +105,5 @@ public boolean equals(Object obj) {
 
 public int compareTo(Taldeak o) {
 	return Integer. compare(this.getTaldekod(), o.taldekod);
-}
-
+}	
 }

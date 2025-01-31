@@ -1,9 +1,10 @@
 package objektuak;
 
 import java.util.Objects;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Pertsona {
+public class Pertsona implements Serializable{
     private String izena;
     private String abizena;
     private PertsonaMota mota;
@@ -16,6 +17,14 @@ public class Pertsona {
         this.mota = null;
         this.NAN = "";
         this.jaiotzedata = null;
+    }
+    
+    public Pertsona(String izena, String abizena ) {
+    	this.izena = izena;
+    	this.abizena = izena;
+    	this.mota = null;
+    	this.NAN = "";
+    	this.jaiotzedata = null;
     }
 
     public Pertsona(String izena, String abizena, PertsonaMota mota, String NAN, LocalDate jaiotzedata) {
@@ -105,4 +114,3 @@ public class Pertsona {
         jokalari;
     }
 }
-
