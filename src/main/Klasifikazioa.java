@@ -1,49 +1,33 @@
 package main;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.SwingConstants;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
 import javax.swing.JButton;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.ImageIcon;
-import java.awt.Color;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.*;
+
+import objektuak.Denboraldiak;
+import objektuak.Jardunaldiak;
+import objektuak.Partiduak;
+import objektuak.Taldeak;
 
 public class Klasifikazioa extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable tableKlasifikazioa;
-	private JButton btnAtzera;
-	private static DefaultTableModel dtm;
-	private JLabel lblNewLabel;
-  private JTable table2;
-  private JTextField textField;
-  private JLabel lblNewLabel_2;
-  private JButton btnNewButton_1;
 
-
-	/**
-	 * Create the frame.
-	 */
-	
-	public Klasifikazioa(ArrayList<String[]> datos, ArrayList<String[]> datos2
-) {
+	public Klasifikazioa(Jornadas jornada) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 433);
 		contentPane = new JPanel();
@@ -52,107 +36,121 @@ public class Klasifikazioa extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblGoiBurua = new JLabel("Klasifikazioak");
-		lblGoiBurua.setForeground(new Color(255, 255, 255));
-		lblGoiBurua.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGoiBurua.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblGoiBurua.setBounds(241, 22, 210, 37);
-		contentPane.add(lblGoiBurua);
+		Denboraldiak denboraldia = jornada.getDenboraldia();
+		List<Jardunaldiak> jardunaldiak = jornada.getJardunaldiak();
+		List<Partiduak> partiduak = jornada.getPartiduak();
+		List<Taldeak> taldeak = jornada.getTaldeak();
+		System.out.println(jardunaldiak.size());
+		System.out.println(partiduak.size());
+		System.out.println(taldeak.size());
 		
-		String[] columnNames = {"selectedItem1", "selectedItem2","selectedItem3","selectedItem4"};
-		String[][] filas = {
-        {"selectedItem1", "selectedItem2"},
-        {"selectedItem3","selectedItem4"}
-    };
+		String[] zutabeak = {"Postua", "Taldea", "Zelaia", "Irabaziak", "Galduak", "Enpateak", "Irabazi %"};
+		DefaultTableModel taulaModeloa = new DefaultTableModel(zutabeak, 0);
 		
-		dtm = new DefaultTableModel(columnNames, 0);
-		for (String[] fila : datos) {
-			dtm.addRow(fila);
+		ArrayList<ArrayList<String>> taldePuntuazioak = new ArrayList<ArrayList<String>>();
+		List<Taldeak> taldeKopia = taldeak;
+		
+		
+		/*
+		 * Klasifikazioa ateratzeko, XML fitxategi batetik inportatu egin den datuan Jornadas klasean gorde egin dira. Klase horren informazioa, klasifikazioa ateratzeko erabiliko da.
+		 * Klase horretatik, denboraldia, jardunaldiak, partiduak eta taldeak atera ahalko dira, eta informazio horrekin klasifikazioa ateratzen da.
+		 */
+		boolean amaiera = false;
+		int irabaziakA;
+		int galdutakA;
+		int enpateakA;
+		int kokapena;
+		//int irabaziakB;
+		//int galdutakB;
+		for (Taldeak taldea : taldeKopia) {
+			kokapena = 0;
+			irabaziakA = 0;
+			galdutakA = 0;
+			enpateakA = 0;
+			
+			// Klasifikaziorako taldeen informazioa eta irabazi, galdu eta enpatatu egin duten partiduen kopurua gordeko duen lista desordenatu bat sortzen da.
+			ArrayList<String> taldeInformazioa = new ArrayList<String>();
+			for (Partiduak partidua : partiduak) {
+				if ((partidua.getEtxeko_taldea().equals(taldea) && partidua.getEtxekoTaldekoPuntuazioa() > partidua.getKanpokoTaldekoPuntuazioa()) || (partidua.getKanpoko_taldea().equals(taldea) && partidua.getKanpokoTaldekoPuntuazioa() > partidua.getEtxekoTaldekoPuntuazioa())) {
+					irabaziakA++;
+				}
+				else if ((partidua.getEtxeko_taldea().equals(taldea) && partidua.getEtxekoTaldekoPuntuazioa() < partidua.getKanpokoTaldekoPuntuazioa()) || (partidua.getKanpoko_taldea().equals(taldea) && partidua.getKanpokoTaldekoPuntuazioa() < partidua.getEtxekoTaldekoPuntuazioa())) {
+					galdutakA++;
+				}
+				else if (partidua.getEtxeko_taldea().equals(taldea) || partidua.getKanpoko_taldea().equals(taldea)) {
+					enpateakA++;
+				}
+			}
+			taldeInformazioa.add(taldea.getIzena() + "");
+			taldeInformazioa.add(taldea.getZelaia());
+			taldeInformazioa.add(irabaziakA + "");
+			taldeInformazioa.add(galdutakA + "");
+			taldeInformazioa.add(enpateakA + "");
+			taldeInformazioa.add((irabaziakA / (irabaziakA + galdutakA + enpateakA) * 100) + "%");
+			taldePuntuazioak.add(taldeInformazioa);
 		}
-  
-		 DefaultTableModel dtm2 = new DefaultTableModel(filas, 0);
-	    for (String[] fil : datos2) {
-	        dtm2.addRow(fil);
-	    }
-	    
-	    
-		/*partidu jolastutako datuak hemen */
-		tableKlasifikazioa = new JTable(dtm);
-		tableKlasifikazioa.setBounds(36, 82, 384, 253);
-		contentPane.add(tableKlasifikazioa);
 		
-		btnAtzera = new JButton("Atzera");
-		btnAtzera.setBounds(303, 345, 85, 21);
-		contentPane.add(btnAtzera);
-
-		btnAtzera.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        Menua m = new Menua();
-		        m.setVisible(true);
-		        dispose(); // Cierra la ventana actual
-		    }
-		});
+		// Ondoren, aurreko ArrayList-aren informazio berdina eukiko duen beste lista bat sortzen da, baina hau, ranking-aren posizio zenbakia eukiko duena. 
+		ArrayList<ArrayList<String>> klasifikazioaOrdenatua = new ArrayList<ArrayList<String>>();
 		
-		 table2 = new JTable(dtm2);
-     table2.setBounds(451, 82, 201, 253);
-     contentPane.add(table2);
-     
-     TableRowSorter<TableModel> sorter = new TableRowSorter<>(dtm2);
-     table2.setRowSorter(sorter);
-     
-     textField = new JTextField();
-     textField.setBounds(448, 53, 96, 19);
-     contentPane.add(textField);
-     textField.setColumns(10);
-     
-     JButton btnNewButton = new JButton("Sartu");
-     btnNewButton.setBounds(567, 51, 85, 21);
-     contentPane.add(btnNewButton);
-     
-     JLabel lblNewLabel_1 = new JLabel("Jolastutako pariduak");
-     lblNewLabel_1.setForeground(new Color(255, 255, 255));
-     lblNewLabel_1.setBounds(184, 59, 132, 21);
-     contentPane.add(lblNewLabel_1);
-     
-     lblNewLabel_2 = new JLabel("Klasifikazioa");
-     lblNewLabel_2.setForeground(new Color(255, 255, 255));
-     lblNewLabel_2.setBounds(520, 30, 85, 13);
-     contentPane.add(lblNewLabel_2);
-     
-     btnNewButton_1 = new JButton("Ordenatu");
-     btnNewButton_1.setBounds(501, 345, 85, 21);
-     contentPane.add(btnNewButton_1);
-     btnNewButton_1.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(ActionEvent e) {
-                 // Establecer el orden descendente (de mayor a menor)
-            	 sorter.setSortKeys(java.util.Collections.singletonList(new RowSorter.SortKey(1, SortOrder.DESCENDING)));             }
-         });
-     lblNewLabel = new JLabel("New label");
- 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\IK_1DW3D\\Downloads\\blue-background-abstract-illustration-with-gradient-blur-design-free-vector_resized.jpg"));
- 		lblNewLabel.setBounds(0, 0, 696, 407);
- 		contentPane.add(lblNewLabel);
-     
-     btnNewButton.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(ActionEvent e) {
-                 // Obtener el texto del JTextField
-                 String data = textField.getText().trim();
-
-                 // Verificar que no esté vacío y que tenga al menos dos palabras
-                 String[] words = data.split("\\s+"); // dividir por espacios
-
-                 if (words.length >= 2) {
-                     // Agregar las dos primeras palabras como una nueva fila en el JTable
-                     dtm2.addRow(new Object[]{words[0], words[1]});
-                     // Limpiar el JTextField
-                     textField.setText("");
-                 } else {
-                     JOptionPane.showMessageDialog(null, "Por favor ingrese al menos dos palabras separadas por espacio.");
-                 }
-             }
-         });
+		boolean handiena;
+		int puntuazioaA;
+		int puntuazioaB;
+		int ranking;
+		for (ArrayList<String> informazioaD : taldePuntuazioak) {
+			ranking = 1;
+			puntuazioaA = Integer.valueOf(informazioaD.get(2));
+			ArrayList<String> datuakSartzea = new ArrayList<String>();
+			for (ArrayList<String> informazioaD2 : taldePuntuazioak) {
+				puntuazioaB = Integer.valueOf(informazioaD2.get(2));
+				if (puntuazioaA < puntuazioaB) {
+					ranking++; // Bere puntuazioa handiagoa denean, ranking-ean posizioak igoko ditu :)...
+				}
+			}
+			datuakSartzea.add(ranking + "");
+			datuakSartzea.add(informazioaD.get(0));
+			datuakSartzea.add(informazioaD.get(1));
+			datuakSartzea.add(informazioaD.get(2));
+			datuakSartzea.add(informazioaD.get(3));
+			datuakSartzea.add(informazioaD.get(4));
+			datuakSartzea.add(informazioaD.get(5));
+			klasifikazioaOrdenatua.add(datuakSartzea);
+		}
+		
+		JTable taula = new JTable(taulaModeloa);
+		
+		JScrollPane scrollPane = new JScrollPane(taula);
+		scrollPane.setBounds(22, 22, 500, 366);
+		contentPane.add(scrollPane);
+		IrteeraSarreraXML.LOG("Klasifikazioa kargatu da :)"); 
+		
+		// Amaitzeko, ArrayList-ean dagoen ranking posizioaren zenbakiaren arabera ordenatu egingo ditu. 
+		for (int i = 0; i < klasifikazioaOrdenatua.size(); i++) {
+			for (ArrayList<String> taulanSartzea : klasifikazioaOrdenatua) {
+				if (Integer.valueOf(taulanSartzea.get(0)) == (i + 1)) {
+					int irabaziak = Integer.valueOf(taulanSartzea.get(3));
+					int galdutak = Integer.valueOf(taulanSartzea.get(4));
+					int enpateak = Integer.valueOf(taulanSartzea.get(5));
+					Double erantzuna = ((1.0 * irabaziak) / ((irabaziak + galdutak + enpateak)) * 100.0);
+					String[] datuInformazioa = {taulanSartzea.get(0), taulanSartzea.get(1), taulanSartzea.get(2), irabaziak + "", galdutak + "", enpateak + "", erantzuna + "%"};
+					taulaModeloa.addRow(datuInformazioa);
+				}
+			}
+		}
+		Menua menua = new Menua();
+    JButton btnBueltatu = new JButton("Atzera");
+     btnBueltatu.setBounds(555, 88, 100, 66);
+     btnBueltatu.setVisible(true);
+     contentPane.add(btnBueltatu);
+     btnBueltatu.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Menua eguneratzeko = new Menua();
+						eguneratzeko.EguneratuTaldeak();
+						menua.setVisible(true);
+						dispose();
+					}             
+      });
  }
 }
-

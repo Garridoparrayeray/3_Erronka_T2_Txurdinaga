@@ -21,15 +21,14 @@ public class JokalariaSortu extends JFrame implements ActionListener {
     private JTextField textJokalaria, textJokalariKodea, textJokalariaAbizena, textJokalariaRola, textTaldeKodea;
     private JButton btnGordeIzenak, btnKenduJokalaria, btnGordeAldaketak;
     private DefaultTableModel tableModel;
-    private JTable tableTaldeak;
+    private JTable tableJokalariak;
     private Menua menua;
     
     private List<Jokalariak> listaJokalariak = TaldeenErabilpena.irakurriJokalariak();
     private List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
 
     public JokalariaSortu(Menua menua) {
-    	System.out.print(listaJokalariak.size());
-    	//EREDU GRAFIKOA. MAIN BAKARRA MENUAN EZ EDUKITZEKO 18 MAIN
+    		// JokalariakSortu leioaren interfaze grafikoa sortzeko: 
         this.menua = menua;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 544, 384);
@@ -95,8 +94,8 @@ public class JokalariaSortu extends JFrame implements ActionListener {
         contentPane.add(btnGordeIzenak);
 
         tableModel = new DefaultTableModel(new String[]{"Jokalaria"}, 0);
-        tableTaldeak = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(tableTaldeak);
+        tableJokalariak = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(tableJokalariak);
         scrollPane.setBounds(324, 70, 196, 223);
         contentPane.add(scrollPane);
 
@@ -113,7 +112,7 @@ public class JokalariaSortu extends JFrame implements ActionListener {
         JButton btnAtzera = new JButton("Atzera");
         btnAtzera.addActionListener(e -> {
             if (menua != null) {
-                menua.EguneratuTaldeak(); // TALDEAK EGUNERATU
+                menua.EguneratuTaldeak(); // Taldeak eguneratzen ditu
             }
             Menua eguneratzeko = new Menua();
             eguneratzeko.EguneratuTaldeak();
@@ -123,7 +122,7 @@ public class JokalariaSortu extends JFrame implements ActionListener {
         btnAtzera.setBounds(222, 303, 85, 21);
         contentPane.add(btnAtzera);
 
-        // Irakurri taldeak erabiltzeko
+        // jokalariak.dat fitxategian gordeta dauden jokalarien informazioa, taulan automatikoki jartzeko partea: 
         List<Jokalariak> jokalariak = TaldeenErabilpena.irakurriJokalariak();
         for (Jokalariak jokalaria : jokalariak) {
             tableModel.addRow(new Object[]{jokalaria.getJokalarikod() + " " +  jokalaria.getIzena() + " " + jokalaria.getAbizena() + " " + jokalaria.getJokalariRola()});
@@ -142,13 +141,16 @@ public class JokalariaSortu extends JFrame implements ActionListener {
           int taldeKod = Integer.valueOf(textTaldeKodea.getText());
           boolean errepikatu = true;
           
-
-          for (Taldeak taldea : listaTaldeak) {
-          	if (taldea.getTaldekod() == taldeKod) {
+          /*
+           * Parte honetan, aldagai berdina erabiltzen da, sartu den talde kodea existitzen dela eta sartutako jokalari_kod errepikatuta ez egotea egiaztatzeko erabiltzen da 
+           * Jokalaria sortu ahal izateko, errepikatu aldagaiaren balioa, false izan behar da. Defektuz true izango da. Hau, da, aldatu egin beharko da.
+          */
+          for (Taldeak taldea : listaTaldeak) {  
+          	if (taldea.getTaldekod() == taldeKod) { // Lehenengo, sartu den talde_kod-a, aplikazioan gordeta dauden talde bateko izatea egiaztatzen du. Taldea existitzen bada, errepikatu aldagaia false balioa hartuko du
           		errepikatu = false;
           	}
           }
-          for (Jokalariak jokalaria : listaJokalariak) {
+          for (Jokalariak jokalaria : listaJokalariak) { // Ondoren, sartutako jokalari_kod, aplikazioan gordeta dauden beste jokalari batek, jokalari_kod berdina ez izatea egiaztatzen du. Sartutako jokalari_kod, aplikazioan gordeta dagoen beste jokalari baten jokalari_kod-arekin berdina badute, errepikatu aldagaia true balioa berriro hartuko du. Bestela, false balioarekin mantenduko da.
         		if (jokalaria.getJokalarikod() == jokalariKod) {
         			errepikatu = true;
         		}
@@ -159,8 +161,7 @@ public class JokalariaSortu extends JFrame implements ActionListener {
           } else if (isDuplicate(izena)) {
               JOptionPane.showMessageDialog(this, "Talde hau dagoeneko gehituta dago", "Errorea", JOptionPane.WARNING_MESSAGE);
           } else {
-          		Pertsona pertsona = new Pertsona(izena, abizena);
-          		Jokalariak jokalaria = new Jokalariak(pertsona, jokalariKod, izena, abizena, jokalariRola, taldeKod);
+          		Jokalariak jokalaria = new Jokalariak(jokalariKod, izena, abizena, jokalariRola, taldeKod);
           		tableModel.addRow(new Object[]{jokalariKod + " " + izena + " " +  abizena + " " +  jokalariRola + " " +  taldeKod});
               textJokalariKodea.setText("");
               textJokalaria.setText("");
@@ -168,67 +169,69 @@ public class JokalariaSortu extends JFrame implements ActionListener {
               textJokalariaRola.setText("");
               textTaldeKodea.setText("");
               listaJokalariak.add(jokalaria);
+              IrteeraSarreraXML.LOG(jokalaria.getIzena() + " jokalaria sortu egin da"); 
           }
           }
           else {
           	JOptionPane.showMessageDialog(null, "Taldea ez da existitzen edo jokalari kodea errepikatuta dago. Berriro saiatu mesedez...", "Errorea", JOptionPane.ERROR_MESSAGE);
           }
-        } else if (source == btnKenduJokalaria) {
-            int[] selectedRows = tableTaldeak.getSelectedRows();
-            if (selectedRows.length == 0) {
-                JOptionPane.showMessageDialog(this, "Aukeratu taldea kendu nahi baduzu.", "Errorea", JOptionPane.ERROR_MESSAGE);
-            } else {
-                List<String> jokalariak = new ArrayList<>();
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                	jokalariak.add(tableModel.getValueAt(i, 0).toString());
-                }
-                
-                String txt = tableModel.getValueAt(tableTaldeak.getSelectedRow(), 0).toString();
-                int jokalariKod = 0;
-                String zenbakiaAteratzen = "";
-                for (int i = 0; i < txt.length(); i++) {
-                	char c = txt.charAt(i);
-                	if (Character.isDigit(c)) {
-                		zenbakiaAteratzen += c;
-                	}
-                	else if (!Character.isDigit(c)){
-                		jokalariKod = Integer.valueOf(zenbakiaAteratzen);
-                		i = txt.length() * 10;
-                	}
-                }
-                
-                for (int i = 0; i < listaJokalariak.size(); i++) {
-                	if (listaJokalariak.get(i).getJokalarikod() == jokalariKod) {
-                		jokalariKod = i;
-                	}
-                }
-                
-                TaldeenErabilpena.JokalariakKendu(listaJokalariak, listaJokalariak.get(jokalariKod));
-                JOptionPane.showMessageDialog(this, "Taldeak kendu dira eta fitxategia eguneratu da!", "Informazioa", JOptionPane.INFORMATION_MESSAGE);
-                tableModel.removeRow(tableTaldeak.getSelectedRow());
-            }
-        } else if (source == btnGordeAldaketak) {
+        } else if (source == btnKenduJokalaria) {  
+        	
+          int[] selectedRows = tableJokalariak.getSelectedRows(); 
+          /*
+           * Jokalaria kentzeko hiru kasu begiratzen ditu. Jokalariak aukeratu ez badituzu, aukeratu duzun jokalaria, jokalariak.dat fitxategian oraindik gorde ez badzu eta, aukeratu duzun jokalaria, jokalariak.dat fitxategian gordeta badago
+           * Jokalaria bat aukeratu ez baduzu, abisatzeko mesu bat agertuko da.
+           * Aukeratu duzun jokalaria, jokalariak.dat-ean oraindik ez baduzu gorde, taulatik ezabatuko du bakarrik, jokalariak.dat eguneratu gabe.
+           * Aukeratu duzun jokalariak, jokalariak.dat-ean gordeta badago, aurreko kasuaren berdina egingo du, baina kasu honetan, bai eguneratuko du jokalariak.dat, aukeratu duzun jokalaria, fitxategi horretatik ezabatzeko ere. 
+           */
+          
+          if (selectedRows.length == 0) {
+              JOptionPane.showMessageDialog(this, "Aukeratu jokalari bat kendu nahi baduzu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+          } else {
+              for (int i = 0; i < selectedRows.length; i++) {
+                  String jugadorData = tableModel.getValueAt(selectedRows[i], 0).toString();
+                  int jokalariKod = 0;
+                  String zenbakiaAteratzen = "";
+                  
+                  for (int j = 0; j < jugadorData.length(); j++) {
+                      char c = jugadorData.charAt(j);
+                      if (Character.isDigit(c)) {
+                          zenbakiaAteratzen += c;
+                      } else if (!Character.isDigit(c) && !zenbakiaAteratzen.isEmpty()) {
+                          jokalariKod = Integer.parseInt(zenbakiaAteratzen);
+                          break;
+                      }
+                  }
+
+                  for (int j = 0; j < listaJokalariak.size(); j++) {
+                      if (listaJokalariak.get(j).getJokalarikod() == jokalariKod) {
+                          TaldeenErabilpena.JokalariakKendu(listaJokalariak, listaJokalariak.get(j));
+                          tableModel.removeRow(selectedRows[i] - i);
+                          break;
+                      }
+                  }
+              }
+              IrteeraSarreraXML.LOG("Sortutako jokalari bat ezabatu egin da"); 
+              JOptionPane.showMessageDialog(this, "Jokalaria kendu da eta fitxategia eguneratu da!", "Informazioa", JOptionPane.INFORMATION_MESSAGE);
+          }
+      }
+        else if (source == btnGordeAldaketak) {
+        	// Sortu dituzun jokalariak, jokalariak.dat fitxategian gordetzeko atala:
             if (tableModel.getRowCount() < 0) {
                 JOptionPane.showMessageDialog(this, "Gutxienez sei talde behar dira.", "Errorea", JOptionPane.ERROR_MESSAGE);
             } else {
-                // List<String> taldeak = new ArrayList<>();
-            		// for (int i = 0; i < tableModel.getRowCount(); i++) {
-            		//     taldeak.add((String) tableModel.getValueAt(i, 0));
-            		// }
-                
                 TaldeenErabilpena.gordeJokalariak(listaJokalariak);
                 JOptionPane.showMessageDialog(this, "Taldeak gorde dira!", "Informazioa", JOptionPane.INFORMATION_MESSAGE);
                 if (menua != null) {
                     menua.EguneratuJokalariak(); // Eguneratu baina menu barruen
                 }
+                IrteeraSarreraXML.LOG("Jokalarietan diren aldaketak, jokalariak.dat fitxategian gorde egin dira."); 
                 menua.setVisible(true);
-                //Menua eguneratzeko = new Menua();
-                //eguneratzeko.EguneratuTaldeak();
                 dispose();
             }
         }
     }
-    //taldeak ez ipintzeko bi aldiz 
+    // Jokalariak errepikatuta ez egoteko
     private boolean isDuplicate(String izena) {
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             if (tableModel.getValueAt(i, 0).toString().equalsIgnoreCase(izena)) {

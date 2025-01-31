@@ -23,8 +23,9 @@ public class TaldeakSortu extends JFrame implements ActionListener {
     private List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
 
     public TaldeakSortu(Menua menua) {
-    	System.out.print(listaTaldeak.size());
-    	//EREDU GRAFIKOA. MAIN BAKARRA MENUAN EZ EDUKITZEKO 18 MAIN
+    		
+    	// Taldeak sortzeko leioaren interfaze grafikoa sortzeko partea: 
+    	IrteeraSarreraXML.LOG("TaldeakSortu leioan sartu da.");
         this.menua = menua;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 544, 384);
@@ -128,12 +129,13 @@ public class TaldeakSortu extends JFrame implements ActionListener {
             } else if (isDuplicate(izena)) {
                 JOptionPane.showMessageDialog(this, "Talde hau dagoeneko gehituta dago", "Errorea", JOptionPane.WARNING_MESSAGE);
             } else {
-            		Taldeak taldea = new Taldeak(taldeKod, izena, zelaia);
+            	Taldeak taldea = new Taldeak(taldeKod, izena, zelaia);
                 tableModel.addRow(new Object[]{taldeKod + " " + izena + " " + zelaia});
                 textTaldeak.setText("");
                 textTaldeakKodea.setText("");
                 textTaldeakZelaia.setText("");
                 listaTaldeak.add(taldea);
+                IrteeraSarreraXML.LOG(taldea.getIzena() + " taldea sortu egin da.");
             }
             }
             else {
@@ -144,45 +146,55 @@ public class TaldeakSortu extends JFrame implements ActionListener {
             if (selectedRows.length == 0) {
                 JOptionPane.showMessageDialog(this, "Aukeratu taldea kendu nahi baduzu.", "Errorea", JOptionPane.ERROR_MESSAGE);
             } else {
-                List<String> taldeak = new ArrayList<>();
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                	taldeak.add(tableModel.getValueAt(i, 0).toString());
+            		List<Taldeak> taldeak = TaldeenErabilpena.irakurriTaldeak();
+                if (taldeak.size() == 0) {
+                	List<String> taldeakString = new ArrayList<>();
+                  for (int i = 0; i < tableModel.getRowCount(); i++) {
+                  	taldeakString.add(tableModel.getValueAt(i, 0).toString());
+                  }
+                  
+                  String txt = tableModel.getValueAt(tableTaldeak.getSelectedRow(), 0).toString();
+                  int taldeKod = 0;
+                  String zenbakiaAteratzen = "";
+                  for (int i = 0; i < txt.length(); i++) {
+                  	char c = txt.charAt(i);
+                  	if (Character.isDigit(c)) {
+                  		zenbakiaAteratzen += c;
+                  	}
+                  	else if (!Character.isDigit(c)) {
+                  		taldeKod = Integer.valueOf(zenbakiaAteratzen);
+                  		i = txt.length() * 10;
+                  	}
+                  }
+                  
+                  for (int i = 0; i < listaTaldeak.size(); i++) {
+                  	if (listaTaldeak.get(i).getTaldekod() == taldeKod) {
+                  		taldeKod = i;
+                  	}
+                  }
+                  IrteeraSarreraXML.LOG("sortutako talde bat ezabatu egin da");
                 }
-                
-                String txt = tableModel.getValueAt(tableTaldeak.getSelectedRow(), 0).toString();
-                int taldeKod = 0;
-                String zenbakiaAteratzen = "";
-                for (int i = 0; i < txt.length(); i++) {
-                	char c = txt.charAt(i);
-                	if (Character.isDigit(c)) {
-                		zenbakiaAteratzen += c;
-                	}
-                	else if (!Character.isDigit(c)) {
-                		taldeKod = Integer.valueOf(zenbakiaAteratzen);
-                		i = txt.length() * 10;
-                	}
-                }
-                
-                for (int i = 0; i < listaTaldeak.size(); i++) {
-                	if (listaTaldeak.get(i).getTaldekod() == taldeKod) {
-                		taldeKod = i;
+                else {
+                	for (int i = 0; i < selectedRows.length; i++) {
+                  	Taldeak taldeaR = (Taldeak) tableModel.getValueAt(i, 0);
+                  	for (int i2 = 0; i2 < listaTaldeak.size(); i2++) {
+                  		if (listaTaldeak.get(i2).equals(taldeaR)) {
+                  			TaldeenErabilpena.TaldeakKendu(listaTaldeak, listaTaldeak.get(i2));
+                  			JOptionPane.showMessageDialog(this, "Taldeak kendu dira eta fitxategia eguneratu da!", "Informazioa", JOptionPane.INFORMATION_MESSAGE);
+                  			tableModel.removeRow(tableTaldeak.getSelectedRow());
+                  		}
+                  	}
+                  	IrteeraSarreraXML.LOG(taldeaR.getIzena() + " taldea, taldea.dat fitxategitik ezabatu da.");
                 	}
                 }
-                
-                TaldeenErabilpena.TaldeakKendu(listaTaldeak, listaTaldeak.get(taldeKod));
-                JOptionPane.showMessageDialog(this, "Taldeak kendu dira eta fitxategia eguneratu da!", "Informazioa", JOptionPane.INFORMATION_MESSAGE);
-                tableModel.removeRow(tableTaldeak.getSelectedRow());
             }
         } else if (source == btnGordeAldaketak) {
             if (tableModel.getRowCount() < 0) {
                 JOptionPane.showMessageDialog(this, "Gutxienez sei talde behar dira.", "Errorea", JOptionPane.ERROR_MESSAGE);
             } else {
-                // List<String> taldeak = new ArrayList<>();
-            		// for (int i = 0; i < tableModel.getRowCount(); i++) {
-            		//     taldeak.add((String) tableModel.getValueAt(i, 0));
-            		// }
                 
                 TaldeenErabilpena.gordeTaldeak(listaTaldeak);
+                IrteeraSarreraXML.LOG("sortu egin diren taldea, taldeak.dat fitxategian gorde dira");
                 JOptionPane.showMessageDialog(this, "Taldeak gorde dira!", "Informazioa", JOptionPane.INFORMATION_MESSAGE);
                 if (menua != null) {
                     menua.EguneratuTaldeak(); // Eguneratu baina menu barruen
@@ -194,7 +206,8 @@ public class TaldeakSortu extends JFrame implements ActionListener {
             }
         }
     }
-    //taldeak ez ipintzeko bi aldiz 
+    
+    // Taldeak errepikatuta ez egoteko
     private boolean isDuplicate(String izena) {
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             if (tableModel.getValueAt(i, 0).toString().equalsIgnoreCase(izena)) {

@@ -86,7 +86,7 @@ public int hashCode() {
 
 @Override
 public String toString() {
-	return "Taldeak [izena=" + izena + ", taldekod=" + taldekod + ", herrialdea=" + herrialdea + ", incrementar="
+	return "Taldeak [taldekod=" + taldekod + ", izena=" + izena + ", herrialdea=" + herrialdea + "]"
 			+ incrementar + "]";
 }
 
@@ -105,6 +105,5 @@ public boolean equals(Object obj) {
 
 public int compareTo(Taldeak o) {
 	return Integer. compare(this.getTaldekod(), o.taldekod);
-}
-
+}	
 }

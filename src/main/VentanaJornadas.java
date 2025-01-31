@@ -15,6 +15,7 @@ public class VentanaJornadas extends JFrame {
     private DefaultTableModel model;
 
     public VentanaJornadas(Jornadas jornadas) {
+    	// Sortu den Jornadas berria nola den ikusteko eta gorde nahi baldin bada, XML moduan exportatu ahal izateko leioaren interfaze grafikoaren partea: 
         setTitle("Gestión de Jornadas");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -45,7 +46,6 @@ public class VentanaJornadas extends JFrame {
         		model.addRow(new Object[]{partidua.getJardunaldiak().getJardunaldi_deskribapena(), (partidua.getEtxeko_taldea().getIzena() + " VS " + partidua.getKanpoko_taldea().getIzena()), ""});
         		counter++;
         	}
-        	
         }
 
         // Jornadas exportatzeko optzioa
@@ -53,6 +53,7 @@ public class VentanaJornadas extends JFrame {
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	IrteeraSarreraXML.LOG("Sortu den Jornadas berria, XML fitxategi batean exportau egin da");
             	IrteeraSarreraXML.IrteeraXML(jornadas);
             }
         });

@@ -79,6 +79,7 @@ public class TaldeenErabilpena {
         }
     }
     
+    // Jardunaldiak irakurtzeko
     public static List<Jornadas> jardunaldiakIrakurri() {
     	File file3 = new File(jardunaldiakFile);
       if (file3.exists()) {
@@ -91,6 +92,7 @@ public class TaldeenErabilpena {
     	return new ArrayList<Jornadas>();
     }
     
+    // Jardunaldiak gordetzeko
     public static void jardunaldiakGorde(List<Jornadas> jardunaldiak) {
     	try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jardunaldiakFile))) {
     		oos.writeObject(jardunaldiak);

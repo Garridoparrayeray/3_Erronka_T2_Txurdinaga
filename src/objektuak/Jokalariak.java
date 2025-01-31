@@ -24,14 +24,14 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
       this.taldeKod = 0;
   }
   
-  public Jokalariak(Pertsona pertsona, int jokalarikod, String izena, String abizena, String jokalariRola, int taldeKod) {   
+  public Jokalariak(int jokalarikod, String izena, String abizena, String jokalariRola, int taldeKod) {   
   	super(izena, abizena);
   	this.jokalarikod = jokalarikod;
   	this.jokalariRola = jokalariRola;
   	this.taldeKod = taldeKod;
 }
 
-  public Jokalariak(Pertsona pertsona, String jokalarikod, String nan, String izena, String abizena, LocalDate jaiotzedata, String jokalariRola, int taldeKod) {
+  public Jokalariak(String jokalarikod, String nan, String izena, String abizena, LocalDate jaiotzedata, String jokalariRola, int taldeKod) {
       super(izena, abizena, PertsonaMota.jokalari, nan, jaiotzedata);
       this.jokalarikod = incrementar++;
       this.jokalariRola = jokalariRola;
@@ -47,7 +47,7 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
 
   @Override
   public String toString() {
-      return "Jokalariak {" +" izena='" + getIzena() + '\'' +  ", abizena='" + getAbizena() + '\'' + ", NAN='" + getNAN() + '\'' + ", jaiotzedata=" + getJaiotzedata() +  ", jokalarikod=" + jokalarikod +  ", posizioa='" + jokalariRola + '\'' + '}';
+      return "Jokalariak {" +  "jokalarikod=" + jokalarikod +", izena='" + getIzena() + '\'' +  ", abizena='" + getAbizena() + '\'' + ", NAN='" + getNAN() + '\'' + ", jaiotzedata=" + getJaiotzedata() +  ", posizioa='" + jokalariRola + '\'' + '}';
   }
 
 	@Override

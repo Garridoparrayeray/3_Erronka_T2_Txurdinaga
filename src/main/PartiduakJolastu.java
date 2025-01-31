@@ -20,8 +20,9 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     private JButton btnJugar, btnJardunaldiakErakutsi;
     private JTextField textTaldeA, textTaldeB;
     
-    public PartiduakJolastu() {
-        // Configuración de la ventana principal
+    public PartiduakJolastu(Jornadas jornada) {
+    	
+    	// Partiduak Jolasteko (Partiduen emaitzak sartzeko) leioaren interfaze grafikoa sortzeko partea: 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 500);
         contentPane = new JPanel();
@@ -29,11 +30,39 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
+        Menua menua = new Menua();
+        JButton btnBueltatu = new JButton("Atzera");
+        btnBueltatu.setBounds(150, 250, 100, 66);
+        btnBueltatu.setVisible(true);
+        contentPane.add(btnBueltatu);
+        btnBueltatu.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Menua eguneratzeko = new Menua();
+            eguneratzeko.EguneratuTaldeak();
+            menua.setVisible(true);
+            dispose();
+					}             
+        });
         
-        List<Jornadas> listaJornadas = TaldeenErabilpena.jardunaldiakIrakurri();
-  			Jornadas jornada = listaJornadas.get(listaJornadas.size() - 1);
-        
+        JButton btnGordeDatuak = new JButton("GORDE");
+        btnGordeDatuak.setBounds(300, 250, 222, 66);
+        btnGordeDatuak.setVisible(true);
+        contentPane.add(btnGordeDatuak);
+        btnGordeDatuak.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Menua eguneratzeko = new Menua();
+						eguneratzeko.EguneratuTaldeak();
+						IrteeraSarreraXML.IrteeraXML(jornada); // Automatikoki sortu den Jornada berria erabili ahal izateko, beharrezkoa da gordetzea. Hau, XML moduan exportatzeko partea da. 
+						menua.setVisible(true);
+						dispose();
+					}             
+        });
+
+        List<Taldeak> listaTaldeak = jornada.getTaldeak();
         List<Jardunaldiak> jardunaldiak = jornada.getJardunaldiak();
       	JPanel jardunaldiPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       	jardunaldiPanel.setBounds(50, 0, 500, 400);
@@ -44,12 +73,19 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     		int counter = 0;
     		System.out.println(partiduak.size());
     		System.out.println(jardunaldiak.size());
-    			while (counter < partiduak.size() - 1 || primariCounter < jardunaldiak.size() - 1) {
+    		System.out.println(listaTaldeak.size());
+    		
+    	/*
+    	 * Jornada baten jardunaldien eta jardunaldi horien partiduen arabera, emaitzak sartu nahi duzun partidua menu desplegableekin aukeratu ahal izateko partea automatikoki sartzeko kodea:
+    	 * Hau lortzeko, Jardunaldi bakoitzerako botoi bat sortu egingo du eta, ondoren, botoi bakoitzera menu desplegablea sortzen du, non, jardunaldiaren partidu bakoita, JMenuItem moduan automatiko sartuko du
+    	 * Partidu bat aukeratzean, partidu horren emaitzak sartzeko JOptionPane bat agertuko da, eta puntuak sartu ondoren,, partidu objetu horretan, partiduaren puntuazioa gehituko dio.
+    	 */
+    		
+    			while (counter < partiduak.size() && primariCounter < jardunaldiak.size()) {
     				Jardunaldiak jardunaldia = jardunaldiak.get(primariCounter);
     				JButton btnJardunaldia = new JButton(jardunaldia.getJardunaldi_deskribapena());
       			jardunaldiPanel.add(btnJardunaldia);
     				JPopupMenu menu = new JPopupMenu();	
-        		//menu.setLayout(new BoxLayout(menu, BoxLayout.X_AXIS));
       			btnJardunaldia.addActionListener(new ActionListener() {
   						
   						@Override
@@ -58,18 +94,17 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
   						}
   					});
       			
-      			
     				for (int i = 0; i < (listaTaldeak.size()) / 2; i++) {
     					if (counter != partiduak.size()) {
     						Partiduak partidua = partiduak.get(counter);
-        				Taldeak taldeA = partidua.getEtxeko_taldea();
-        				Taldeak taldeB = partidua.getKanpoko_taldea();
-        				JMenuItem partiduakMenu = new JMenuItem(taldeA + " VS " + taldeB);
-        				partiduakMenu.addActionListener(new ActionListener() {
+    						Taldeak taldeA = partidua.getEtxeko_taldea();
+    						Taldeak taldeB = partidua.getKanpoko_taldea();
+    						JMenuItem partiduakMenu = new JMenuItem(taldeA.getIzena() + " VS " + taldeB.getIzena());
+    						partiduakMenu.addActionListener(new ActionListener() {
     							
     							@Override
     							public void actionPerformed(ActionEvent e) {
-    								puntuazioaSartu(partiduakMenu, taldeA.getIzena(), taldeB.getIzena());
+    								puntuazioaSartu(partidua);
     							}
     						});
         				menu.add(partiduakMenu);
@@ -80,11 +115,11 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     			}
     }
     
-    public void puntuazioaSartu (JMenuItem partidua, String taldeA, String taldeB) {
+    public void puntuazioaSartu (Partiduak partidua) {
     	JPanel puntuazioPanela = new JPanel(new GridLayout(4, 1));
-  		JLabel eskaeraTaldeA = new JLabel(taldeA + " taldearen puntuazioa sartu: ");
+  		JLabel eskaeraTaldeA = new JLabel(partidua.getEtxeko_taldea().getIzena() + " taldearen puntuazioa sartu: ");
   		JTextField puntuazioaSartu1 = new JTextField();
-  		JLabel eskaeraTaldeB = new JLabel(taldeB + " taldearen puntuazioa sartu: ");
+  		JLabel eskaeraTaldeB = new JLabel(partidua.getKanpoko_taldea().getIzena() + " taldearen puntuazioa sartu: ");
   		JTextField puntuazioaSartu2 = new JTextField();
   		
   		puntuazioPanela.add(eskaeraTaldeA);
@@ -97,110 +132,25 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
   		String puntuazioaA = puntuazioaSartu1.getText();
   		String puntuazioaB = puntuazioaSartu2.getText();
   		if (puntuazioaA.isEmpty()) {
-  			JOptionPane.showMessageDialog(null, (taldeA + " taldeko puntuazioa sartu behar da. Berriro saiatu mesedez"), "Errorea", JOptionPane.ERROR_MESSAGE);
+  			JOptionPane.showMessageDialog(null, (partidua.getEtxeko_taldea().getIzena() + " taldeko puntuazioa sartu behar da. Berriro saiatu mesedez"), "Errorea", JOptionPane.ERROR_MESSAGE);
   		}
   		else if (puntuazioaB.isEmpty()) {
-  			JOptionPane.showMessageDialog(null, (taldeB + " taldeko puntuazioa sartu behar da. Berriro saiatu mesedez"), "Errorea", JOptionPane.ERROR_MESSAGE);
+  			JOptionPane.showMessageDialog(null, (partidua.getKanpoko_taldea().getIzena() + " taldeko puntuazioa sartu behar da. Berriro saiatu mesedez"), "Errorea", JOptionPane.ERROR_MESSAGE);
   		}
   		else {
-  			boolean ezDiraZenbakiak = false;
-  			char c;
-  			for (int i = 0; i < puntuazioaA.length(); i++) {
-  				c = puntuazioaA.charAt(i);
-  				if (!Character.isDigit(c)) {
-  					ezDiraZenbakiak = true;
-  				}
-  			}
-  			for (int i2 = 0; i2 < puntuazioaB.length(); i2++) {
-  				c = puntuazioaA.charAt(i2);
-  				if (!Character.isDigit(c)) {
-  					ezDiraZenbakiak = true;
-  				}
-  			}
-  			if (ezDiraZenbakiak == false) {
+  				int puntuakTaldeA = Integer.valueOf(puntuazioaA);
+  				int puntuakTaldeB = Integer.valueOf(puntuazioaB);
   				
-  			}
-  			else {
-  				JOptionPane.showMessageDialog(null, "Puntuazioko datuak, zenbaki osoak izatea derrigorrezkoa da. Saiatu berriro mesedez");
-  			}
+  				partidua.setEtxekoTaldekoPuntuazioa(puntuakTaldeA);
+  				partidua.setKanpokoTaldekoPuntuazioa(puntuakTaldeB);
+  				
+  				IrteeraSarreraXML.LOG(partidua.getEtxeko_taldea().getIzena() + " vs " + partidua.getKanpoko_taldea().getIzena() + " partiduaren emaitzak egoki gorde egin dira... :)"); 
+  				JOptionPane.showMessageDialog(null, "Puntuak ondo sartu egin dira :)", "Konfirmazioa", JOptionPane.INFORMATION_MESSAGE);
   		}
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    	
-    	
-        // Acción cuando se hace clic en el botón "Jugar"
-       /*  if (e.getSource() == btnJugar) {
-        	String taldea1 = textTaldeA.getText();
-        	String taldea2 = textTaldeB.getText();
-        	int counter = 0;
-        	
-         if (!taldea1.isEmpty() && !taldea2.isEmpty()) {
-        	 for (Taldeak taldea : listaTaldeak) {
-        		 if (taldea1.equals(taldea.getIzena())) {
-        			 counter++;
-        		 }
-        		 if (taldea2.equals(taldea.getIzena())) {
-        			 counter++;
-        		 }
-        	 }
-        	 
-        	 if (counter == 2) {
-        		 JPanel datuakSartu = new JPanel(new GridLayout(4, 1));
-        		 JLabel eskaera1 = new JLabel(taldea1 + " taldearen puntuazioa sartu: ");
-        		 JTextField puntuazioaSartu1 = new JTextField();
-        		 JLabel eskaera2 = new JLabel(taldea2 + " taldearen puntuazioa sartu: ");
-        		 JTextField puntuazioaSartu2= new JTextField();
-        		 
-        		 datuakSartu.add(eskaera1);
-        		 datuakSartu.add(puntuazioaSartu1);
-        		 datuakSartu.add(eskaera2);
-        		 datuakSartu.add(puntuazioaSartu2);
-        		 JOptionPane.showMessageDialog(null, datuakSartu, "Emaitzak Sartzeko", JOptionPane.OK_CANCEL_OPTION);
-        		 
-        		 boolean interruptorea = false;
-        		 String puntuazioa1 = puntuazioaSartu1.getText().trim();
-        		 String puntuazioa2 = puntuazioaSartu2.getText().trim();
-        		 char c;
-        		 
-        		 for (int i = 0; i < puntuazioa1.length(); i++) {
-        			 c = puntuazioa1.charAt(i);
-        			 if (!Character.isDigit(c)) {
-        				 interruptorea = true;
-        			 }
-        		 }
-        		 for (int i2 = 0; i2 < puntuazioa2.length(); i2++) {
-        			 c = puntuazioa1.charAt(i2);
-        			 if (!Character.isDigit(c)) {
-        				 interruptorea = true;
-        			 }
-        		 }
-        		 
-        		 if (interruptorea == false) {
-        			 
-        		 }
-        		 else {
-        			 JOptionPane.showMessageDialog(null, "Puntuazioan, bakarri zenbakiak sartu ahal dira. Berriro saiatu mesedez", "Errorea", JOptionPane.ERROR_MESSAGE);
-        		 }
-        	 }
-        	 else {
-        		 
-        	 }
-         }
-         else {
-        	 if (taldea1.isEmpty()) {
-        		 JOptionPane.showMessageDialog(null, "A taldearen izenaren eremua utxik dago. A taldearen izena sartu eta berriro saiatu mesedez.", "Errorea", JOptionPane.ERROR_MESSAGE);
-        	 }
-        	 else {
-        		 JOptionPane.showMessageDialog(null, "B taldearen izenaren eremua utxik dago. B taldearen izena sartu eta berriro saiatu mesedez.", "Errorea", JOptionPane.ERROR_MESSAGE);
-        	 }
-         }
-        } 
-        else if (e.getSource() == btnJardunaldiakErakutsi) {
-        	List<List<String>> jardunaldiIrakurria = TaldeenErabilpena.jardunaldiakIrakurri();
-        	VentanaJornadas JFrameJardunaldia = new VentanaJornadas(jardunaldiIrakurria);
-        	JFrameJardunaldia.setVisible(true);
-        }*/
+    	// Etorkizun baterako...
     }
 }

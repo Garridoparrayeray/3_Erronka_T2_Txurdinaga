@@ -56,6 +56,17 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = jardunaldia;
 		}
 		
+		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
+			this.partidu_kod = partidu_kod;
+			this.etxeko_taldea = etxeko_taldea;
+			this.kanpoko_taldea = kanpoko_taldea;
+			this.zelaia = zelaia;
+			this.partidudata = null;
+			this.etxekoTaldekoPuntuazioa = etxekoTaldekoPuntuazioa;
+			this.kanpokoTaldekoPuntuazioa = kanpokoTaldekoPuntuazioa;
+			this.jardunaldia = jardunaldia;
+		}
+		
 		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, String partidudata, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
 			this.partidu_kod = partidu_kod;
 			this.etxeko_taldea = etxeko_taldea;
