@@ -11,6 +11,15 @@ import java.util.List;
 import objektuak.Taldeak;
 import main.Menua;
 
+/**
+ * TaldeakSortu klasea, taldeak sortzeko eta kudeatzeko aukera ematen duen interfazea eskaintzen duen JFrame klasea da.
+ * <p>
+ * Honen bidez, erabiltzaileak taldeak sortu, aldatu eta ezabatu ditzake. Gainera, taldeak fitxategi batean gorde edo 
+ * ezabatu ahal izango ditu.
+ * </p>
+ * 
+ * @author [Talde 4]
+ */
 public class TaldeakSortu extends JFrame implements ActionListener {
 
     private JPanel contentPane;
@@ -22,6 +31,12 @@ public class TaldeakSortu extends JFrame implements ActionListener {
     
     private List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
 
+    /**
+     * TaldeakSortu klasearen eraikitzailea. Leioaren interfazea sortzen du eta
+     * taldeak ikusten, sortzen eta kudeatzen laguntzen duen funtzionalitatea eskaintzen du.
+     * 
+     * @param menua Menua objektua, aplikazioaren menura itzultzeko aukera ematen duena.
+     */
     public TaldeakSortu(Menua menua) {
     		
     	// Taldeak sortzeko leioaren interfaze grafikoa sortzeko partea: 
@@ -108,6 +123,11 @@ public class TaldeakSortu extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Ekintza desberdinak kudeatzen ditu botoi bakoitzaren arabera.
+     * 
+     * @param e Ekintza bat (botoi bat sakatzean sortzen dena).
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -123,11 +143,14 @@ public class TaldeakSortu extends JFrame implements ActionListener {
             		errepikatu = true;
             	}
             }
-            if (errepikatu == false) {
+            if (taldeKod <= 0) {
+            	JOptionPane.showMessageDialog(this, "Talde kodea ezin da negatiboa izan", "Errorea Talde kodean", JOptionPane.ERROR_MESSAGE);
+            }
+            else if (errepikatu == false) {
             	if (izena.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Ez duzu talderik sartu", "Errorea", JOptionPane.ERROR_MESSAGE);
-            } else if (isDuplicate(izena)) {
-                JOptionPane.showMessageDialog(this, "Talde hau dagoeneko gehituta dago", "Errorea", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Taldearen izena sartu egin behar da", "Errorea Taldearen Izenean", JOptionPane.ERROR_MESSAGE);
+            } else if (zelaia.isEmpty()) {
+            	JOptionPane.showMessageDialog(this, "Taldearen zelaia sartu egin behar da", "Errorea", JOptionPane.WARNING_MESSAGE);
             } else {
             	Taldeak taldea = new Taldeak(taldeKod, izena, zelaia);
                 tableModel.addRow(new Object[]{taldeKod + " " + izena + " " + zelaia});
@@ -207,6 +230,12 @@ public class TaldeakSortu extends JFrame implements ActionListener {
         }
     }
     
+    /**
+     * Talde izen errepikatuak egon daitezkeen egiaztatzeko metodoa.
+     * 
+     * @param izena Taldearen izena.
+     * @return Errepikatu dauden talde izenak egiaztatzea (true/false).
+     */
     // Taldeak errepikatuta ez egoteko
     private boolean isDuplicate(String izena) {
         for (int i = 0; i < tableModel.getRowCount(); i++) {

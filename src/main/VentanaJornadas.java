@@ -9,11 +9,22 @@ import java.util.List;
 
 import objektuak.*;
 
+/**
+ * VentanaJornadas klaseak grafikoaren bidez jardunaldiak kudeatzeko leihoa eskaintzen du.
+ * Leiho honek jardunaldi bakoitzaren informazioa taula batean erakusten du eta,
+ * erabiltzaileak "Guardar Resultados" botoia sakatuz, XML fitxategi batean gorde dezake.
+ */
 public class VentanaJornadas extends JFrame {
     private static final long serialVersionUID = 3655324882502558546L;
     private JTable table;
     private DefaultTableModel model;
 
+    /**
+     * VentanaJornadas eraikitzailea. Jardunaldiak eta partiduak taula batean erakusteko leiho bat sortzen du.
+     * Erabiltzaileak partiduaren emaitzak gorde ditzake.
+     * 
+     * @param jornadas Jardunaldiak kudeatzeko objektua, informazioa lortzeko.
+     */
     public VentanaJornadas(Jornadas jornadas) {
     	// Sortu den Jornadas berria nola den ikusteko eta gorde nahi baldin bada, XML moduan exportatu ahal izateko leioaren interfaze grafikoaren partea: 
         setTitle("Gestión de Jornadas");
@@ -48,7 +59,7 @@ public class VentanaJornadas extends JFrame {
         	}
         }
 
-        // Jornadas exportatzeko optzioa
+        // Jornadas exportatzeko aukera
         JButton btnGuardar = new JButton("Guardar Resultados");
         btnGuardar.addActionListener(new ActionListener() {
             @Override

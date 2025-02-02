@@ -5,13 +5,22 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import objektuak.*;
 
+/**
+ * TaldeenErabilpena klaseak taldeen, jokalarien eta jardunaldien datuak artxibotik irakurri, gorde eta eguneratzeko funtzioak eskaintzen ditu.
+ * Fitxategiak erabiltzen ditu datuak gordetzeko eta irakurtzeko.
+ */
 public class TaldeenErabilpena {
 
     private static final String FILE_NAME = "taldeak.dat";
     private static final String jokalariaFile = "jokalariak.dat";
     private static final String jardunaldiakFile  = "jardunaldiak.dat";
 
-    // Irakurri taldeak artxibotik
+    /**
+     * Taldeak irakurtzen ditu "taldeak.dat" fitxategitik.
+     * 
+     * @return Taldeen zerrenda bat. Fitxategia ez badago edo irakurtzeko errore bat gertatzen bada, zerrenda huts bat itzultzen du.
+     */
+    // Irakurri taldeak .dat fitxategitik
     public static List<Taldeak> irakurriTaldeak() {
         File file = new File(FILE_NAME);
         if (file.exists()) {
@@ -24,7 +33,12 @@ public class TaldeenErabilpena {
         return new ArrayList<>();
     }
 
-    //Gorde taldeak artxiboan
+    /**
+     * Taldeak "taldeak.dat" fitxategian gordetzen ditu.
+     * 
+     * @param taldeak Talde guztien zerrenda.
+     */
+    //Gorde taldeak .dat fitxategian
     public static void gordeTaldeak(List<Taldeak> taldeak) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(taldeak);
@@ -33,7 +47,13 @@ public class TaldeenErabilpena {
         }
     }
 
-    // Kendu eta berritu taldeak fitxategian
+    /**
+     * Taldea "taldeak.dat" fitxategitik ezabatu eta taldeen zerrenda eguneratzen du.
+     * 
+     * @param taldeak Taldeen zerrenda.
+     * @param taldea Ezabatu nahi den taldea.
+     */
+    // Kendu eta berritu taldeak .dat fitxategian
     public static void TaldeakKendu(List<Taldeak> taldeak, Taldeak taldea) {
     	taldeak.remove(taldea);
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
@@ -45,7 +65,12 @@ public class TaldeenErabilpena {
         }
     }
     
-    // Irakurri Jokalariak artxibotik
+    /**
+     * Jokalariak irakurtzen ditu "jokalariak.dat" fitxategitik.
+     * 
+     * @return Jokalari guztien zerrenda. Fitxategia ez bada aurkitzen edo errore bat gertatzen bada, zerrenda huts bat itzultzen du.
+     */
+    // Irakurri Jokalariak .dat fitxategitik
     public static List<Jokalariak> irakurriJokalariak() {
         File file2 = new File(jokalariaFile);
         if (file2.exists()) {
@@ -58,7 +83,12 @@ public class TaldeenErabilpena {
         return new ArrayList<>();
     }
 
-    //Gorde jokalariak artxiboan
+    /**
+     * Jokalariak "jokalariak.dat" fitxategian gordetzen ditu.
+     * 
+     * @param jokalariak Jokalari guztien zerrenda.
+     */
+    //Gorde jokalariak .dat fitxategian
     public static void gordeJokalariak(List<Jokalariak> jokalariak) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jokalariaFile))) {
             oos.writeObject(jokalariak);
@@ -67,7 +97,13 @@ public class TaldeenErabilpena {
         }
     }
 
-    // Kendu eta berritu jokalariak fitxategian
+    /**
+     * Jokalaria "jokalariak.dat" fitxategitik ezabatu eta jokalarien zerrenda eguneratzen du.
+     * 
+     * @param jokalariak Jokalari guztien zerrenda.
+     * @param jokalaria Ezabatu nahi den jokalaria.
+     */
+    // Kendu eta berritu jokalariak .dat fitxategian
     public static void JokalariakKendu(List<Jokalariak> jokalariak, Jokalariak jokalaria) {
     	jokalariak.remove(jokalaria);
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jokalariaFile))) {
@@ -79,6 +115,11 @@ public class TaldeenErabilpena {
         }
     }
     
+    /**
+     * Jardunaldiak irakurtzen ditu "jardunaldiak.dat" fitxategitik.
+     * 
+     * @return Jardunaldi guztien zerrenda. Fitxategia ez bada aurkitzen edo irakurtzeko errore bat gertatzen bada, zerrenda huts bat itzultzen du.
+     */
     // Jardunaldiak irakurtzeko
     public static List<Jornadas> jardunaldiakIrakurri() {
     	File file3 = new File(jardunaldiakFile);
@@ -92,6 +133,11 @@ public class TaldeenErabilpena {
     	return new ArrayList<Jornadas>();
     }
     
+    /**
+     * Jardunaldiak "jardunaldiak.dat" fitxategian gordetzen ditu.
+     * 
+     * @param jardunaldiak Jardunaldi guztien zerrenda.
+     */
     // Jardunaldiak gordetzeko
     public static void jardunaldiakGorde(List<Jornadas> jardunaldiak) {
     	try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(jardunaldiakFile))) {

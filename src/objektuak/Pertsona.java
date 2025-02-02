@@ -4,6 +4,10 @@ import java.util.Objects;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * Pertsona klaseak pertsonaren datuak modelatzen ditu, hala nola izena, abizena, mota, NAN eta jaiotze data.
+ * Klase honek ere PertsonaMota enum-a barne hartzen du, pertsonaren mota zehazteko (entrenatzailea, epailea edo jokalari).
+ */
 public class Pertsona implements Serializable{
     private String izena;
     private String abizena;
@@ -11,6 +15,9 @@ public class Pertsona implements Serializable{
     private String NAN;
     private LocalDate jaiotzedata;
 
+    /**
+     * Ezarpen-lehena: pertsona bat sortzen du datu hutsekin.
+     */
     public Pertsona() {
         this.izena = "";
         this.abizena = "";
@@ -19,6 +26,11 @@ public class Pertsona implements Serializable{
         this.jaiotzedata = null;
     }
     
+    /**
+     * Ezarpen-lehena: izen eta abizenekin pertsona bat sortzen du.
+     * @param izena Pertsonaren izena
+     * @param abizena Pertsonaren abizena
+     */
     public Pertsona(String izena, String abizena ) {
     	this.izena = izena;
     	this.abizena = izena;
@@ -27,6 +39,14 @@ public class Pertsona implements Serializable{
     	this.jaiotzedata = null;
     }
 
+    /**
+     * Ezarpen-lehena: izen, abizena, mota, NAN eta jaiotze datarekin pertsona bat sortzen du.
+     * @param izena Pertsonaren izena
+     * @param abizena Pertsonaren abizena
+     * @param mota Pertsonaren mota (entrenatzailea, epailea, jokalari)
+     * @param NAN Pertsonaren NAN
+     * @param jaiotzedata Pertsonaren jaiotze data
+     */
     public Pertsona(String izena, String abizena, PertsonaMota mota, String NAN, LocalDate jaiotzedata) {
         this.izena = izena;
         this.abizena = abizena;

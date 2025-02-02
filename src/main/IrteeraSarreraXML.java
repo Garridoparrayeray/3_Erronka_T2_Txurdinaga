@@ -29,12 +29,21 @@ import objektuak.Jardunaldiak;
 import objektuak.Partiduak;
 import objektuak.Taldeak;
 
+/**
+ * IrteeraSarreraXML klasea LOG bat gordetzeko eta XML fitxategiak inportatzeko eta exportatzeko balio du.
+ */
 public class IrteeraSarreraXML {
-	
+	/**
+     * Eraikitzaile hutsa.
+     */
 	public IrteeraSarreraXML(){
-		// Eraikitzaile hutsa
 	}
 	
+	 /**
+     * XML fitxategi bat sortu eta gordetzen du aukeratutako helbidean.
+     * 
+     * @param Jornadas objektua, XML batean exportatzeko.
+     */
 	public static void IrteeraXML(Jornadas jornada){
 		JFileChooser fileChooser = new JFileChooser();
 	    fileChooser.setDialogTitle("Guardar archivo XML");
@@ -66,6 +75,7 @@ public class IrteeraSarreraXML {
 			try {
 				DocumentBuilder herramienta = fabricaEpica.newDocumentBuilder(); // Dokumentuak sortzeko objetua
 				Document xmlDokumentua = herramienta.newDocument(); // Dokumentua
+				
 				// Elementuak sortu eta bere barruan beste elementuak edo informazioa sartzen du
 				Element root = xmlDokumentua.createElement("jornadas"); 
 				xmlDokumentua.appendChild(root);
@@ -168,16 +178,16 @@ public class IrteeraSarreraXML {
 		        	}
 		        }	
 				
-		        TransformerFactory autobotsFabrica = TransformerFactory.newInstance(); // Transformatzeko tresnak dituen objetua
+		        TransformerFactory tfp = TransformerFactory.newInstance(); // Transformatzeko tresnak dituen objetua
 	        	try {
-	        		Transformer optimusPrime = autobotsFabrica.newTransformer(); // Transformatzeko objetua
-	        		optimusPrime.setOutputProperty(OutputKeys.INDENT, "yes"); // Guk errazago irakurtzeko da.
+	        		Transformer transformer = tfp.newTransformer(); // Transformatzeko objetua
+	        		transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // Guk errazago irakurtzeko da.
 	        		
 	        		DOMSource DOOM = new DOMSource(xmlDokumentua); // transformatu nahi duzun dokumentua aukeratzeko (ordenagailuari abisatzeko hori zehazki transformatu nahi duzula)
 	        		StreamResult STEAM = new StreamResult(fileToSave); // xml Dokumentuaren irteera helmuga ordenagailuari adierazteko da
 	        		IrteeraSarreraXML.LOG("Fitxategia exportatu da. Ondo generatu/sortu da :)...");  // Ondo atera dela mezua :)
 	        		try {
-	        			optimusPrime.transform(DOOM, STEAM);
+	        			transformer.transform(DOOM, STEAM);
 	        		} catch (TransformerException OP2) {
 	        			JOptionPane.showMessageDialog(null, "TransformerException motatako errorea eman du.", "Errorea", JOptionPane.ERROR_MESSAGE);
 	        		}
@@ -190,6 +200,11 @@ public class IrteeraSarreraXML {
 	    }
 	}
 	
+	/**
+     * XML fitxategia irakurri eta datuak Jornadas objektu batean kargatzen ditu.
+     * 
+     * @return Jornadas objektua, XML batetik lortutako datuekin.
+     */
 	public static Jornadas SarreraXML() {
 		JFileChooser fileChooser = new JFileChooser();
 	    fileChooser.setDialogTitle("Seleccionar archivo XML");
@@ -298,7 +313,7 @@ public class IrteeraSarreraXML {
 				
 				boolean errepikatua;
 				// Gordeko diren taldeak errepikatua ez egotea egiaztatzen du. 
-        int respuesta = JOptionPane.showConfirmDialog(null, "¿Quieres guardar los equipos?", "Confirmar Guardado", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);		
+				int respuesta = JOptionPane.showConfirmDialog(null, "¿Taldek gorde nahi dituzu?", "Gorde konfirmazioa", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);		
 				if (respuesta == JOptionPane.YES_OPTION) {
 					
           List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
@@ -338,6 +353,11 @@ public class IrteeraSarreraXML {
 		return jornada;
 	}
 	
+	/**
+     * LOG kudeatzeko partea
+     * 
+     * @param Aplikazioan, erabiltzailea egiten dituen gauzen LOG.
+     */
 	public static void LOG(String gertaera) {
 		// log.txt fitxategian, gertaera guztiak gordeko dira
 		

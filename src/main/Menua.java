@@ -17,7 +17,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-
+/**
+ * Menua klasea aplikazioaren menu nagusia da, eta botoiak eta ekintza desberdinak kudeatzen ditu.
+ * Bertan, taldeak sortzeko, jokalariak sortzeko, partiduak jokatzeko, klasifikazioa ikusteko eta saioa itzitzeko aukera dago.
+ * 
+ * @author Talde 4
+ * @version 1.0
+ */
 public class Menua extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -25,7 +31,11 @@ public class Menua extends JFrame implements ActionListener {
     private List<Taldeak> listaTaldea = TaldeenErabilpena.irakurriTaldeak();
     private List<Jokalariak> listaJokalariak;
     private Jornadas jornadaTenp;
-
+    
+    /**
+     * Aplikazioa abiarazteko metodo nagusia.
+     * Menua leiho nagusia sortzen du eta ikusgai jarri.
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -38,6 +48,9 @@ public class Menua extends JFrame implements ActionListener {
         });
     }
 
+    /**
+     * Menua klasearen eraikitzailea. Leiho nagusia sortzen du eta botoiak eta ekintzak hasieratzen ditu.
+     */
     public Menua() {
     		IrteeraSarreraXML.LOG("Aplikazioan satu da");
     		// .dat fitxategietatik, gorde diren taldeak eta jokalariak irakurtzen ditu
@@ -124,11 +137,22 @@ public class Menua extends JFrame implements ActionListener {
         
     }
 
+    /**
+     * Egin behar diren botoiak erakutsi edo ez erakusteko metodoa.
+     * 
+     * @param erakutsi Botoiak erakutsi edo ez erabakitzen duen balioa.
+     */
     public void botoiak_erakutsi(boolean erakutsi) {
         btnPartiduakJolastu.setVisible(erakutsi);
         btnKlasifikazioa.setVisible(erakutsi);
     }
 
+    /**
+     * Menuan dauden botoien ekintzak kudeatzen dituen metodoa.
+     * Botoiak sakatzen direnean, aplikazioaren atal desberdinetara sartzen da.
+     * 
+     * @param ae Ekintza bakoitzaren gertakaria.
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
@@ -164,6 +188,10 @@ public class Menua extends JFrame implements ActionListener {
           dispose();
         }
     }
+    
+    /**
+     * Taldeak eguneratzen dituen metodoa. Taldeak irakurtzen ditu eta botoiak bistaratzen ditu.
+     */
     public void EguneratuTaldeak() {
     	IrteeraSarreraXML.LOG("Taldeak eguneratu egin dira");
     		listaTaldea = TaldeenErabilpena.irakurriTaldeak();
@@ -172,6 +200,9 @@ public class Menua extends JFrame implements ActionListener {
         btnJokalariaSortu.setVisible(listaTaldea.size() >= 1 ? true : false);
     }
     
+    /**
+     * Jokalariak eguneratzen dituen metodoa. Jokalariak irakurtzen ditu.
+     */
     public void EguneratuJokalariak() {
     	IrteeraSarreraXML.LOG("Jokalariak eguneratu egin dira");
   		listaJokalariak = TaldeenErabilpena.irakurriJokalariak();

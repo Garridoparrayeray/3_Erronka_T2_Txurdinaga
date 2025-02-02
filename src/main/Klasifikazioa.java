@@ -22,11 +22,23 @@ import objektuak.Jardunaldiak;
 import objektuak.Partiduak;
 import objektuak.Taldeak;
 
+/**
+ * <code>Klasifikazioa</code> klaseak ligako klasifikazioa erakusten duen leiho bat kudeatzen du.
+ * Jardunaldiak eta partiduak erabiliz, talde guztien puntuazioa eta posizioa kalkulatzen du.
+ */
 public class Klasifikazioa extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
+	/**
+	 * <code>Klasifikazioa</code> klasearen eraikitzailea. 
+	 * Lehenetsi diren parametroekin hasieratzen da.
+	 * Klasifikazioa ateratzeko, <code>Jornadas</code> objektu bat hartzen du eta 
+	 * denboraldiko jardunaldi, partidu eta talde guztiak jasotzen ditu.
+	 * 
+	 * @param jornada <code>Jornadas</code> objektua, jardunaldi, partidu eta taldeak kudeatzen dituena.
+	 */
 	public Klasifikazioa(Jornadas jornada) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 433);

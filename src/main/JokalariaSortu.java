@@ -15,6 +15,10 @@ import objektuak.Jokalariak;
 import objektuak.Pertsona;
 import main.Menua;
 
+/**
+ * Jokalariak sortzeko eta kudeatzeko leihoa.
+ * Jokalari berriak gehitzeko, ezabatzeko eta aldaketak gordetzeko aukera ematen du.
+ */
 public class JokalariaSortu extends JFrame implements ActionListener {
 
     private JPanel contentPane;
@@ -27,6 +31,10 @@ public class JokalariaSortu extends JFrame implements ActionListener {
     private List<Jokalariak> listaJokalariak = TaldeenErabilpena.irakurriJokalariak();
     private List<Taldeak> listaTaldeak = TaldeenErabilpena.irakurriTaldeak();
 
+    /**
+     * Jokalariak sortzeko leihoa sortzen du.
+     * @param menua Menu nagusia eguneratzeko erreferentzia.
+     */
     public JokalariaSortu(Menua menua) {
     		// JokalariakSortu leioaren interfaze grafikoa sortzeko: 
         this.menua = menua;
@@ -128,18 +136,38 @@ public class JokalariaSortu extends JFrame implements ActionListener {
             tableModel.addRow(new Object[]{jokalaria.getJokalarikod() + " " +  jokalaria.getIzena() + " " + jokalaria.getAbizena() + " " + jokalaria.getJokalariRola()});
         }
     }
-
+    
+    /**
+     * Ekintza bat exekutatzen du botoi bati sakatzen zaionean.
+     * @param e Ekintza gertakaria.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
         if (source == btnGordeIzenak) {
         	int jokalariKod = Integer.valueOf(textJokalariKodea.getText());
-          String izena = textJokalaria.getText();
-          String abizena = textJokalariaAbizena.getText();
-          String jokalariRola = textJokalariaRola.getText();
-          int taldeKod = Integer.valueOf(textTaldeKodea.getText());
-          boolean errepikatu = true;
+        	String izena = textJokalaria.getText();
+        	String abizena = textJokalariaAbizena.getText();
+        	String jokalariRola = textJokalariaRola.getText();
+        	int taldeKod = Integer.valueOf(textTaldeKodea.getText());
+        	boolean errepikatu = true;
+          
+        	if (jokalariKod <= 0) {
+        	  JOptionPane.showMessageDialog(null, "Jokalari kodea ezin da negatiboa izan", "Errorea Jokalari kodean", JOptionPane.ERROR_MESSAGE);
+        	}
+        	else if (izena.isEmpty()) {
+        	  JOptionPane.showMessageDialog(null, "Izena ezin da hutsik egon", "Errorea izenan", JOptionPane.ERROR_MESSAGE);
+        	}
+        	else if (abizena.isEmpty()) {
+        	  JOptionPane.showMessageDialog(null, "Abizena ezin da hutsik egon", "Errorea Abizenan", JOptionPane.ERROR_MESSAGE);
+        	}
+        	else if (jokalariRola.isEmpty()) {
+        	  JOptionPane.showMessageDialog(null, "Jokalari rola ezin da hutsik egon", "Errorea izenan", JOptionPane.ERROR_MESSAGE);
+        	}
+        	else if (taldeKod <= 0) {
+        	  JOptionPane.showMessageDialog(null, "Talde kodea ezin da negatiboa izan", "Errorea Talde kodean", JOptionPane.ERROR_MESSAGE);
+        	}
           
           /*
            * Parte honetan, aldagai berdina erabiltzen da, sartu den talde kodea existitzen dela eta sartutako jokalari_kod errepikatuta ez egotea egiaztatzeko erabiltzen da 
@@ -159,21 +187,21 @@ public class JokalariaSortu extends JFrame implements ActionListener {
           	if (izena.isEmpty()) {
               JOptionPane.showMessageDialog(this, "Ez duzu talderik sartu", "Errorea", JOptionPane.ERROR_MESSAGE);
           } else if (isDuplicate(izena)) {
-              JOptionPane.showMessageDialog(this, "Talde hau dagoeneko gehituta dago", "Errorea", JOptionPane.WARNING_MESSAGE);
+              JOptionPane.showMessageDialog(this, "Jokalari hau dagoeneko gehituta dago", "Errorea", JOptionPane.WARNING_MESSAGE);
           } else {
           		Jokalariak jokalaria = new Jokalariak(jokalariKod, izena, abizena, jokalariRola, taldeKod);
           		tableModel.addRow(new Object[]{jokalariKod + " " + izena + " " +  abizena + " " +  jokalariRola + " " +  taldeKod});
-              textJokalariKodea.setText("");
-              textJokalaria.setText("");
-              textJokalariaAbizena.setText("");
-              textJokalariaRola.setText("");
-              textTaldeKodea.setText("");
-              listaJokalariak.add(jokalaria);
-              IrteeraSarreraXML.LOG(jokalaria.getIzena() + " jokalaria sortu egin da"); 
+          		textJokalariKodea.setText("");
+          		textJokalaria.setText("");
+          		textJokalariaAbizena.setText("");
+          		textJokalariaRola.setText("");
+          		textTaldeKodea.setText("");
+          		listaJokalariak.add(jokalaria);
+          		IrteeraSarreraXML.LOG(jokalaria.getIzena() + " jokalaria sortu egin da"); 
           }
           }
           else {
-          	JOptionPane.showMessageDialog(null, "Taldea ez da existitzen edo jokalari kodea errepikatuta dago. Berriro saiatu mesedez...", "Errorea", JOptionPane.ERROR_MESSAGE);
+          	JOptionPane.showMessageDialog(null, "Jokalaria ez da existitzen edo jokalari kodea errepikatuta dago. Berriro saiatu mesedez...", "Errorea", JOptionPane.ERROR_MESSAGE);
           }
         } else if (source == btnKenduJokalaria) {  
         	
@@ -231,6 +259,11 @@ public class JokalariaSortu extends JFrame implements ActionListener {
             }
         }
     }
+    /**
+     * Izena errepikatuta dagoen ala ez egiaztatzen du.
+     * @param izena Jokalariaren izena.
+     * @return True izena errepikatuta badago, bestela false.
+     */
     // Jokalariak errepikatuta ez egoteko
     private boolean isDuplicate(String izena) {
         for (int i = 0; i < tableModel.getRowCount(); i++) {

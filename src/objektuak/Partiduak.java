@@ -9,7 +9,10 @@ import java.util.Objects;
 import main.Jornadas;
 import main.TaldeenErabilpena;
 
-
+/**
+ * Partiduak klasea partidu baten informazioa kudeatzeko erabiltzen da.
+ * Etxeko eta kanpoko taldeak, zelaia, puntuazioak, eta partidua burutzen den jardunaldia biltzen ditu.
+ */
 public class Partiduak implements Serializable {
 		private int partidu_kod;
 		private Taldeak etxeko_taldea;
@@ -23,6 +26,9 @@ public class Partiduak implements Serializable {
 		
 		private int counter = 1;
 		
+		/**
+	     * Partidu bat sortzeko lehenengo konstruktorea. Balioak lehenetsiak dira.
+	     */
 		public Partiduak() {
 			this.partidu_kod = automatikoa();
 			this.etxeko_taldea = new Taldeak();
@@ -34,6 +40,13 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = new Jardunaldiak();
 		}
 		
+		/**
+	     * Partidu bat sortzeko konstruktorea, non taldeak eta jardunaldia ezartzen diren.
+	     * @param etxeko_taldea Etxeko taldea
+	     * @param kanpoko_taldea Kanpoko taldea
+	     * @param zelaia Partidua jokatzen den zelaia
+	     * @param jardunaldia Partiduaren jardunaldia
+	     */
 		public Partiduak(Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, Jardunaldiak jardunaldia) {
 			this.partidu_kod = automatikoa();;
 			this.etxeko_taldea = etxeko_taldea;
@@ -45,6 +58,14 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = jardunaldia;
 		}
 		
+		/**
+	     * Partidu bat sortzeko konstruktorea, non taldeak, puntuazioak eta jardunaldia ezartzen diren.
+	     * @param partidu_kod Partiduaren kodea
+	     * @param etxeko_taldea Etxeko taldea
+	     * @param kanpoko_taldea Kanpoko taldea
+	     * @param zelaia Partidua jokatzen den zelaia
+	     * @param jardunaldia Partiduaren jardunaldia
+	     */
 		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, Jardunaldiak jardunaldia) {
 			this.partidu_kod = partidu_kod;
 			this.etxeko_taldea = etxeko_taldea;
@@ -56,6 +77,16 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = jardunaldia;
 		}
 		
+		/**
+	     * Partidu bat sortzeko konstruktorea, non puntuazioak eta jardunaldia ere ezartzen diren.
+	     * @param partidu_kod Partiduaren kodea
+	     * @param etxeko_taldea Etxeko taldea
+	     * @param kanpoko_taldea Kanpoko taldea
+	     * @param zelaia Partidua jokatzen den zelaia
+	     * @param etxekoTaldekoPuntuazioa Etxeko taldearen puntuazioa
+	     * @param kanpokoTaldekoPuntuazioa Kanpoko taldearen puntuazioa
+	     * @param jardunaldia Partiduaren jardunaldia
+	     */
 		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
 			this.partidu_kod = partidu_kod;
 			this.etxeko_taldea = etxeko_taldea;
@@ -67,6 +98,17 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = jardunaldia;
 		}
 		
+		 /**
+	     * Partidu bat sortzeko azkeneko konstruktorea, non data ere ezartzen den.
+	     * @param partidu_kod Partiduaren kodea
+	     * @param etxeko_taldea Etxeko taldea
+	     * @param kanpoko_taldea Kanpoko taldea
+	     * @param zelaia Partidua jokatzen den zelaia
+	     * @param partidudata Partiduaren data
+	     * @param etxekoTaldekoPuntuazioa Etxeko taldearen puntuazioa
+	     * @param kanpokoTaldekoPuntuazioa Kanpoko taldearen puntuazioa
+	     * @param jardunaldia Partiduaren jardunaldia
+	     */
 		public Partiduak(int partidu_kod, Taldeak etxeko_taldea, Taldeak kanpoko_taldea, String zelaia, String partidudata, int etxekoTaldekoPuntuazioa, int kanpokoTaldekoPuntuazioa, Jardunaldiak jardunaldia) {
 			this.partidu_kod = partidu_kod;
 			this.etxeko_taldea = etxeko_taldea;
@@ -78,6 +120,10 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = jardunaldia;
 		}
 		
+		/**
+	     * Partiduaren automatikoki sortutako kodea ematen du, dagoeneko sortutako partidu kodeak saihestuz.
+	     * @return Partidu kode automatikoa
+	     */
 		public Partiduak(Partiduak bestea) {
 			this.partidu_kod = bestea.partidu_kod;
 			this.etxeko_taldea = bestea.etxeko_taldea;
@@ -89,6 +135,10 @@ public class Partiduak implements Serializable {
 			this.jardunaldia = bestea.jardunaldia;
 		}
 		
+		/**
+	     * Partidua bezala adierazteko metodoa.
+	     * @return Partiduaren informazio guztia
+	     */
 		public int automatikoa() {
 			List<Jornadas> jornadas = TaldeenErabilpena.jardunaldiakIrakurri();
 			List<List<Partiduak>> partiduak = new ArrayList<List<Partiduak>>();
@@ -116,16 +166,29 @@ public class Partiduak implements Serializable {
 			return counter;
 		}
 		
+		/**
+	     * Partidua bezala adierazteko metodoa.
+	     * @return Partiduaren informazio guztia
+	     */
 		public String toString() {
 			return "Partidua {partidu kodea=" + partidu_kod + "etxeko taldea=" + etxeko_taldea + ", kanpoko taldea=" + kanpoko_taldea + "zelaia=" + zelaia + ", etxeko taldearen puntuazioa=" + etxekoTaldekoPuntuazioa + ", kanpoko taldearen puntuazioa=" + kanpokoTaldekoPuntuazioa + " }";
 		}
 		
+		/**
+	     * Partiduaren hash kodea ematen du.
+	     * @return Partiduaren hash kodea
+	     */
 		public int hashCode() {
 			int emaitza = 37;
 			emaitza += emaitza * 13 * Objects.hash(partidu_kod);
 			return emaitza;
 		}
 		
+		/**
+	     * Partidu baten berdintasunaren ebaluazioa egiten du.
+	     * @param bestea Bestelako Partidu bat
+	     * @return Berdin badira egia, bestela faltsua
+	     */
 		public boolean equals(Object bestea) {
 			if (this == bestea) {
 				return true;
@@ -139,6 +202,11 @@ public class Partiduak implements Serializable {
 			}
 		}
 		
+		/**
+	     * Partiduak konparatzeko metodoa.
+	     * @param p Beste Partidu bat
+	     * @return Partiduaren konparazioa
+	     */
 		public int compareTo(Partiduak p) {
 			return Integer.compare(partidu_kod, p.partidu_kod);
 		}
