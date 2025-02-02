@@ -13,12 +13,20 @@ import java.util.Collections;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <code>Jornadas</code> klaseak denboraldi baten barruan zeuden jardunaldiak, partiduak eta taldeak kudeatzen ditu.
+ * Jardunaldiak modu automatikoan sor daitezke, partiduak kudeatu eta denboraldi bakoitzeko taldeak gestio daitezke.
+ */
 public class Jornadas implements Serializable {
 	private Denboraldiak denboraldia;
 	private List<Jardunaldiak> jardunaldiak;
 	private List<Partiduak> partiduak;
 	private List<Taldeak> taldeak; 
 	
+	/**
+     * <code>Jornadas</code> klasearen eraikitzaile huts bat.
+     * Atributuak balio lehenetsiekin hasieratzen ditu.
+     */
 	// Eraikitzaile hutsa
 	public Jornadas() {
 		this.denboraldia = new Denboraldiak();
@@ -27,6 +35,14 @@ public class Jornadas implements Serializable {
 		this.taldeak = new ArrayList<Taldeak>();
 	}
 	
+	/**
+     * <code>Jornadas</code> klasea hasieratzen duen eraikitzaile bat, parametroekin.
+     * 
+     * @param denboraldiak  <code>Denboraldiak</code> objektua, denboraldia adierazten duena.
+     * @param jardunaldiak  <code>Jardunaldiak</code> objektu lista, jardunaldiak adierazten dituena.
+     * @param partiduak     <code>Partiduak</code> objektu lista, partiduak adierazten dituena.
+     * @param taldeak       <code>Taldeak</code> objektu lista, taldeak adierazten dituena.
+     */
 	// Eraikitzailea parametroekin
 	public Jornadas(Denboraldiak denboraldiak, List<Jardunaldiak> jardunaldiak, List<Partiduak> partiduak, List<Taldeak> taldeak) {
 		this.denboraldia = denboraldiak;
@@ -35,6 +51,11 @@ public class Jornadas implements Serializable {
 		this.taldeak = taldeak;
 	}
 	
+	/**
+     * Kopia eraikitzaile bat, beste <code>Jornadas</code> objektu baten datuak kopiatzeko.
+     * 
+     * @param bestea <code>Jornadas</code> objektua, kopiatuko dena.
+     */
 	// Eraikitzaile kopia
 	public Jornadas(Jornadas bestea) {
 		this.denboraldia = bestea.denboraldia;
@@ -43,6 +64,11 @@ public class Jornadas implements Serializable {
 		this.taldeak = bestea.taldeak;
 	}
 	
+	/**
+     * Eraikitzaile berezi bat, talde lista batekin automatikoki jardunaldiak sortzeko.
+     * 
+     * @param taldeak taldeen lista, denboraldian parte hartzen duten taldeak.
+     */
 	// Eraikitzaile berezia (Jornadas automatiko sortzeko funtzioa duena)
 	public Jornadas(List<Taldeak> taldeak) {
 		Denboraldiak denboraldiDatua = new Denboraldiak();
@@ -157,7 +183,7 @@ public class Jornadas implements Serializable {
     				irtera = true;
     				JOptionPane.showMessageDialog(null, "Amaiera datako egunaren eremua utzik dago, edo sartutako datua ez da zenbaki oso bat. Berriro saiatu mesdez.");
     			}
-    		break;
+    		break;	
     		case 6: 
     			if (izena.isEmpty()) {
     				irtera = true;
@@ -243,12 +269,15 @@ public class Jornadas implements Serializable {
     		}
     	}
     	IrteeraSarreraXML.LOG("Jornadas bat, automatikoki sortu egin da"); 
-    this.denboraldia = denboraldiDatua;
+    	this.denboraldia = denboraldiDatua;
 		this.jardunaldiak = jardunaldiakDatua;
 		this.partiduak = partiduakDatua;
 		this.taldeak = listaTaldeak;
 	}
 	
+	/**
+     * add parteak, Jornadas-eko lista ezberdinetan listara, objektu indibidiala gehitzeko erabiltzen dira
+     */
 	// Getters eta setters-ak
 	public String randomData() {
 		return "2012-06-12";

@@ -12,6 +12,11 @@ import java.util.Objects;
 
 import main.*;
 
+/**
+ * Denboraldiak klaseak denboraldi baten informazioa kudeatzen du.
+ * Denboraldi bakoitzak kode bat, izen bat, hasiera eta amaiera datak eta jardunaldi kopurua ditu.
+ * Klase honek denboraldiak identifikatzen eta kudeatzen laguntzen du, baita denboraldien berdintasun eta konparaketa funtzioak ere.
+ */
 public class Denboraldiak implements Serializable {
 	private int denboraldi_kod;
 	private String denboraldi_Izena;
@@ -21,6 +26,13 @@ public class Denboraldiak implements Serializable {
 	
 	private List<Jornadas> listaJardunaldiak = TaldeenErabilpena.jardunaldiakIrakurri();
 	
+	/**
+     * Denboraldiak objektuaren eraikitzailea, hasierako balioekin.
+     * 
+     * @param denboraldi_Izena Denboraldiaren izena.
+     * @param hasiera_data Denboraldiaren hasiera data.
+     * @param amaiera_data Denboraldiaren amaiera data.
+     */
 	public Denboraldiak() {
 		this.denboraldi_kod = automatikoa();
 		this.denboraldi_Izena = "";
@@ -53,6 +65,12 @@ public class Denboraldiak implements Serializable {
 		this.jardunaldi_kopurua = bestea.jardunaldi_kopurua;
 	}
 	
+	 /**
+     * Denboraldiaren kodea automatikoan sortzeko funtzioa.
+     * Kodea baldin bada errepikatzen, berriz saiatu eta kode bat sortzen du.
+     * 
+     * @return Denboraldiaren kode automatikoa.
+     */
 	public int automatikoa() {
 		List<Denboraldiak> denboraldiak = new ArrayList<Denboraldiak>();
 		List<Jornadas> listaJornadas = TaldeenErabilpena.jardunaldiakIrakurri();
@@ -78,16 +96,32 @@ public class Denboraldiak implements Serializable {
 		return 10;
 	}
 	
+	/**
+     * Denboraldiaren deskribapena itzultzen du.
+     * 
+     * @return Denboraldiaren informazioa.
+     */
 	public String toString() {
 		return "Denboraldia {denboraldi kodea=" + denboraldi_kod + ", denboraldi izena=" + denboraldi_Izena + ", hasiera_data=" + hasiera_data + ", amaiera_data" + amaiera_data + ", jardunaldi kopurua=" + jardunaldi_kopurua + " }";
 	}
 	
+	/**
+     * Objetoaren hash kodea kalkulatzen du.
+     * 
+     * @return Objetoaren hash kodea.
+     */
 	public int hashCode() {
 		int emaitza = 37;
 		emaitza += emaitza * 13 * Objects.hash(denboraldi_kod);
 		return emaitza;
 	}
 	
+	/**
+     * Beste objektu batekin konparatzen du denboraldia berdina den edo ez.
+     * 
+     * @param bestea Konparatu nahi den beste objektua.
+     * @return True baldin eta objektuak berdinak badira, bestela False.
+     */
 	public boolean equals(Object bestea) {
 		if (this == bestea) {
 			return true;
@@ -101,9 +135,16 @@ public class Denboraldiak implements Serializable {
 		}
 	}
 	
+	/**
+     * Denboraldiak konparatzen ditu, lehenengoa bigarrenarekin alderatuz.
+     * 
+     * @param d Konparatu nahi den beste denboraldia.
+     * @return Negatibo bat, positibo bat edo 0, konparazioaren arabera.
+     */
 	public int compareTo(Denboraldiak d) {
 		return Integer.compare(this.denboraldi_kod, d.denboraldi_kod);
 	}
+	
 	
 	public int getDenboraldi_kod() {
 		return denboraldi_kod;

@@ -14,12 +14,21 @@ import objektuak.Taldeak;
 import objektuak.Partiduak;
 import objektuak.Jardunaldiak;
 
+/**
+ * Partiduak jokatzea kudeatzen duen leihoaren klasea.
+ * Partiduen emaitzak sartu eta XML formatuan gordetzeko aukera eskaintzen du.
+ */
 public class PartiduakJolastu extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JButton btnJugar, btnJardunaldiakErakutsi;
     private JTextField textTaldeA, textTaldeB;
     
+    /**
+     * Partiduak jokatzea kudeatzeko leihoaren konstruktorea.
+     * Leihoaren interfazea hasieratzen du eta osagai guztiak bistaratzen ditu.
+     * @param jornada {@link Jornadas} motako objektua, partiduak eta taldeak dituena.
+     */
     public PartiduakJolastu(Jornadas jornada) {
     	
     	// Partiduak Jolasteko (Partiduen emaitzak sartzeko) leioaren interfaze grafikoa sortzeko partea: 
@@ -66,14 +75,14 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
         List<Jardunaldiak> jardunaldiak = jornada.getJardunaldiak();
       	JPanel jardunaldiPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       	jardunaldiPanel.setBounds(50, 0, 500, 400);
-    		contentPane.add(jardunaldiPanel);
+    	contentPane.add(jardunaldiPanel);
     		
-    		List<Partiduak> partiduak = jornada.getPartiduak();
-    		int primariCounter = 0;
-    		int counter = 0;
-    		System.out.println(partiduak.size());
-    		System.out.println(jardunaldiak.size());
-    		System.out.println(listaTaldeak.size());
+    	List<Partiduak> partiduak = jornada.getPartiduak();
+    	int primariCounter = 0;
+    	int counter = 0;
+    	System.out.println(partiduak.size());
+    	System.out.println(jardunaldiak.size());
+    	System.out.println(listaTaldeak.size());
     		
     	/*
     	 * Jornada baten jardunaldien eta jardunaldi horien partiduen arabera, emaitzak sartu nahi duzun partidua menu desplegableekin aukeratu ahal izateko partea automatikoki sartzeko kodea:
@@ -84,9 +93,9 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     			while (counter < partiduak.size() && primariCounter < jardunaldiak.size()) {
     				Jardunaldiak jardunaldia = jardunaldiak.get(primariCounter);
     				JButton btnJardunaldia = new JButton(jardunaldia.getJardunaldi_deskribapena());
-      			jardunaldiPanel.add(btnJardunaldia);
+    				jardunaldiPanel.add(btnJardunaldia);
     				JPopupMenu menu = new JPopupMenu();	
-      			btnJardunaldia.addActionListener(new ActionListener() {
+    				btnJardunaldia.addActionListener(new ActionListener() {
   						
   						@Override
   						public void actionPerformed(ActionEvent e) {
@@ -115,6 +124,11 @@ public class PartiduakJolastu extends JFrame implements ActionListener {
     			}
     }
     
+    /**
+     * Partidu baten puntuazioa sartzeko erabiltzen den metodoa.
+     * Puntuazioa sartzeko sartu beharreko inputen leiho bat agertuko da.
+     * @param partidua Sartutako partiduaren datuak.
+     */
     public void puntuazioaSartu (Partiduak partidua) {
     	JPanel puntuazioPanela = new JPanel(new GridLayout(4, 1));
   		JLabel eskaeraTaldeA = new JLabel(partidua.getEtxeko_taldea().getIzena() + " taldearen puntuazioa sartu: ");

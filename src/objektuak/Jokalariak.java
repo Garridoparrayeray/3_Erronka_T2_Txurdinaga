@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.io.*;
 
+/**
+ * Jokalariak klaseak jokalarien informazioa kudeatzen du, pertsona klasearen ondorengo gisa.
+ * Klase honek jokalarien datuak, hala nola, identifikazioa, izena, abizena, jaiotze data eta rolak kudeatzen ditu.
+ */
 public class Jokalariak extends Pertsona implements Serializable, Comparable<Jokalariak>{
   private int jokalarikod;
   private String nan;
@@ -14,6 +18,10 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
   private int taldeKod;
   private static int incrementar = 0;
   
+  /**
+   * Jokalariak klasearen eraikitzailea, balio lehenetsiekin.
+   * Jokalariaren hasierako balioak ezartzen ditu.
+   */
   public Jokalariak() {
       this.jokalarikod = incrementar++;
       this.nan = "";
@@ -24,13 +32,33 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
       this.taldeKod = 0;
   }
   
+  /**
+   * Jokalariaren objetu bat sortzen du, hasierako informazioarekin.
+   * 
+   * @param jokalarikod Jokalariaren kodea.
+   * @param izena Jokalariaren izena.
+   * @param abizena Jokalariaren abizena.
+   * @param jokalariRola Jokalariaren rola edo posizioa.
+   * @param taldeKod Jokalariaren taldearen kodea.
+   */
   public Jokalariak(int jokalarikod, String izena, String abizena, String jokalariRola, int taldeKod) {   
   	super(izena, abizena);
   	this.jokalarikod = jokalarikod;
   	this.jokalariRola = jokalariRola;
   	this.taldeKod = taldeKod;
-}
-
+  }
+  
+  /**
+   * Jokalariaren objetu bat sortzen du, hasierako informazio osoarekin.
+   * 
+   * @param jokalarikod Jokalariaren kodea.
+   * @param nan Jokalariaren NAN.
+   * @param izena Jokalariaren izena.
+   * @param abizena Jokalariaren abizena.
+   * @param jaiotzedata Jokalariaren jaiotze data.
+   * @param jokalariRola Jokalariaren rola edo posizioa.
+   * @param taldeKod Jokalariaren taldearen kodea.
+   */
   public Jokalariak(String jokalarikod, String nan, String izena, String abizena, LocalDate jaiotzedata, String jokalariRola, int taldeKod) {
       super(izena, abizena, PertsonaMota.jokalari, nan, jaiotzedata);
       this.jokalarikod = incrementar++;
@@ -38,6 +66,11 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
       this.taldeKod = taldeKod;
   }
   
+  /**
+   * Jokalariaren objektu baten kopia sortzen du.
+   * 
+   * @param beste Beste Jokalariaren objektu bat.
+   */
   // Constructor de copia
   public Jokalariak(Jokalariak beste) {
       super(beste.getIzena(), beste.getAbizena(), PertsonaMota.jokalari, beste.getNAN(), beste.getJaiotzedata());
@@ -45,11 +78,21 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
       this.jokalariRola = beste.jokalariRola;
   }
 
+  /**
+   * Jokalariaren informazioa itzultzen du.
+   * 
+   * @return Jokalariaren informazioaren deskribapena.
+   */
   @Override
   public String toString() {
-      return "Jokalariak {" +  "jokalarikod=" + jokalarikod +", izena='" + getIzena() + '\'' +  ", abizena='" + getAbizena() + '\'' + ", NAN='" + getNAN() + '\'' + ", jaiotzedata=" + getJaiotzedata() +  ", posizioa='" + jokalariRola + '\'' + '}';
+      return "Jokalariak {" +  "jokalarikod=" + jokalarikod +", izena='" + getIzena() +  ", abizena='" + getAbizena() +  ", posizioa='" + jokalariRola + '}';
   }
-
+  
+  /**
+   * Objektuaren hash kodea kalkulatzen du.
+   * 
+   * @return Objetoaren hash kodea.
+   */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -58,6 +101,12 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
 		return result;
 	}
 
+	/**
+	   * Bi objektu konparatzen ditu berdin edo ez.
+	   * 
+	   * @param obj Konparatu nahi den beste objektua.
+	   * @return True baldin eta objektuak berdinak badira, bestela False.
+	   */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -70,6 +119,12 @@ public class Jokalariak extends Pertsona implements Serializable, Comparable<Jok
 		return jokalarikod == other.jokalarikod && Objects.equals(jokalariRola, other.jokalariRola);
 	}
 
+	/**
+	   * Jokalariak konparatzen ditu, lehenengoa bigarrenarekin alderatuz.
+	   * 
+	   * @param o Konparatu nahi den beste Jokalaria.
+	   * @return Negatibo bat, positibo bat edo 0, konparazioaren arabera.
+	   */
 	@Override
 	public int compareTo(Jokalariak o) {
 		return Integer. compare(this.getJokalarikod(), o.jokalarikod);
