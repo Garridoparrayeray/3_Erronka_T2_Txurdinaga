@@ -1,10 +1,10 @@
-# Sistema de Gestión de Torneos y Ligas Deportivas 🏆
+# Sistema de Gestión de Torneos y Ligas Deportivas 
 
 Este proyecto es una aplicación de escritorio desarrollada en **Java** para la gestión integral de competiciones deportivas. Permite la administración completa de jugadores, equipos, jornadas, simulación de partidos y la generación automática de la clasificación.
 
 Desarrollado como parte del 3º Reto (Erronka) en el centro de FP Txurdinaga.
 
-## 🚀 Características Principales
+## Características Principales
 
 * **Gestión de Entidades:**
   * Creación y administración de **Jugadores** (`Jokalariak`) y **Equipos** (`Taldeak`).
@@ -20,7 +20,7 @@ Desarrollado como parte del 3º Reto (Erronka) en el centro de FP Txurdinaga.
   * Navegación principal mediante menús (`Menua`).
   * Ventanas interactivas para la visualización de datos de la liga (`VentanaJornadas`).
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 * **Lenguaje:** Java (POO)
 * **Interfaz Gráfica:** Java Swing / AWT
@@ -28,7 +28,7 @@ Desarrollado como parte del 3º Reto (Erronka) en el centro de FP Txurdinaga.
 * **Documentación:** JavaDoc (incluida en el directorio `/doc/`)
 * **Entorno de Desarrollo:** Optimizado para Eclipse IDE (incluye `.classpath` y `.project`).
 
-## 📂 Estructura del Proyecto
+## Estructura del Proyecto
 
 El código fuente está dividido de forma modular para separar la lógica de negocio, las vistas y los tests:
 ├── src/
